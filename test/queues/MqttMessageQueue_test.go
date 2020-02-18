@@ -56,12 +56,12 @@ func TestMqttMessageQueue(t *testing.T) {
 	// queue.Clear("")
 	// t.Run("On Message", fixture.TestOnMessage)
 
-	t.Run("Receive and Send Message", TestReceiveAndSendMessage)
+	t.Run("Receive and Send Message", ReceiveAndSendMessage)
 	queue.Clear("")
-	t.Run("On Message", TestOnMessage)
+	t.Run("On Message", OnMessage)
 
 }
-func TestReceiveAndSendMessage(t *testing.T) {
+func ReceiveAndSendMessage(t *testing.T) {
 	var envelop1 *msgqueues.MessageEnvelope = msgqueues.NewMessageEnvelope("123", "Test", "Test message")
 	var envelop2 *msgqueues.MessageEnvelope
 
@@ -76,10 +76,10 @@ func TestReceiveAndSendMessage(t *testing.T) {
 	assert.NotNil(t, envelop2)
 	assert.NotNil(t, envelop1.Message)
 	assert.NotNil(t, envelop2.Message)
-	assert.Equal(t, envelop1.Message.String(), envelop2.Message.String())
+	assert.Equal(t, envelop1.Message, envelop2.Message)
 }
 
-func TestOnMessage(t *testing.T) {
+func OnMessage(t *testing.T) {
 	var envelop1 *msgqueues.MessageEnvelope = msgqueues.NewMessageEnvelope("123", "Test", "Test message")
 	var envelop2 *msgqueues.MessageEnvelope
 
@@ -104,7 +104,7 @@ func TestOnMessage(t *testing.T) {
 
 	assert.NotNil(t, envelop1.Message)
 	assert.NotNil(t, envelop2.Message)
-	assert.Equal(t, envelop1.Message.String(), envelop2.Message.String())
+	assert.Equal(t, envelop1.Message, envelop2.Message)
 
 	queue.EndListen("")
 

@@ -1,7 +1,6 @@
 package queues
 
 import (
-	"fmt"
 	"strconv"
 	"sync"
 	"time"
@@ -188,11 +187,7 @@ Sends a message into the queue.
 func (c *MqttMessageQueue) Send(correlationId string, envelop *msgqueues.MessageEnvelope) (err error) {
 	c.Counters.IncrementOne("queue." + c.GetName() + ".sent_messages")
 	c.Logger.Debug(envelop.Correlation_id, "Sent message %s via %s", envelop.ToString(), c.ToString())
-
-	tmpBuf := envelop.Message.String()
-	fmt.Println("Send:", tmpBuf)
-
-	token := c.client.Publish(c.topic, 0, false, tmpBuf)
+	token := c.client.Publish(c.topic, 0, false, envelop.Message)
 	token.Wait()
 	return token.Error()
 }
@@ -349,7 +344,7 @@ func (c *MqttMessageQueue) MoveToDeadLetter(message *msgqueues.MessageEnvelope) 
 
 func (c *MqttMessageQueue) toMessage(msg mqtt.Message) msgqueues.MessageEnvelope {
 
-	envelop := msgqueues.NewMessageEnvelope("", msg.Topic(), msg.Payload())
+	envelop := msgqueues.NewMessageEnvelope("", msg.Topic(), string(msg.Payload()))
 	envelop.Message_id = strconv.FormatUint(uint64(msg.MessageID()), 16)
 	return *envelop
 }
