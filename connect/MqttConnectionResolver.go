@@ -52,7 +52,6 @@ func NewMqttConnectionResolver() *MqttConnectionResolver {
 
 /*
    Configures component by passing configuration parameters.
-
    - config    configuration parameters to be set.
 */
 func (c *MqttConnectionResolver) Configure(config *cconf.ConfigParams) {

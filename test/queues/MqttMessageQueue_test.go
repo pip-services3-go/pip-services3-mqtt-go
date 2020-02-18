@@ -38,6 +38,8 @@ func TestMqttMessageQueue(t *testing.T) {
 		"connection.host", brokerHost,
 		"connection.port", brokerPort,
 		"connection.topic", brokerTopic,
+		//"credential.username", "user",
+		//"credential.password", "pa$$wd",
 	)
 
 	queue = mqueue.NewMqttMessageQueue("testQueue")

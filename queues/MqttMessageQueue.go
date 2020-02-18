@@ -116,7 +116,7 @@ func (c *MqttMessageQueue) OpenWithParams(correlationId string, connection *ccon
 
 	opts := mqtt.NewClientOptions().AddBroker(options.Get("uri"))
 	user := options.Get("username")
-	passwd := options.Get("passwod")
+	passwd := options.Get("password")
 	if user != "" {
 		opts.SetUsername(user)
 	}
