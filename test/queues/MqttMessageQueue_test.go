@@ -6,7 +6,7 @@ import (
 	"time"
 
 	cconf "github.com/pip-services3-go/pip-services3-commons-go/config"
-	msgqueues "github.com/pip-services3-go/pip-services3-messages-go/queues"
+	msgqueues "github.com/pip-services3-go/pip-services3-messaging-go/queues"
 	mqueue "github.com/pip-services3-go/pip-services3-mqtt-go/queues"
 	"github.com/stretchr/testify/assert"
 )

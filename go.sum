@@ -14,10 +14,8 @@ github.com/pip-services3-go/pip-services3-commons-go v1.0.0/go.mod h1:a2fIaCl4TU
 github.com/pip-services3-go/pip-services3-components-go v1.0.0/go.mod h1:Me/KFWw/xeMML89twlGdFKqnvprgt2qyi8xAV1+XKGs=
 github.com/pip-services3-go/pip-services3-components-go v1.0.1 h1:dvoUIO/EkK3XODWrpYDj8Li7tmiiOc1rjv1ap8F7AQM=
 github.com/pip-services3-go/pip-services3-components-go v1.0.1/go.mod h1:Me/KFWw/xeMML89twlGdFKqnvprgt2qyi8xAV1+XKGs=
-github.com/pip-services3-go/pip-services3-messages-go v0.0.0-20200212153733-8a6a518a4037 h1:zUAp0UAHEGxu7XNGP63wjp2WRewC2OulYgCbQKfNUI0=
-github.com/pip-services3-go/pip-services3-messages-go v0.0.0-20200212153733-8a6a518a4037/go.mod h1:xVJTA1E5o09AEbOOYYw5v2K+A+LMdAp7PEN/5bTgwEE=
-github.com/pip-services3-go/pip-services3-messages-go v0.0.0-20200218171611-1c5ceed448ea h1:KM38IhIcTyhZX745K+L+hXASh4Qd1jFjOsQRgm3+E88=
-github.com/pip-services3-go/pip-services3-messages-go v0.0.0-20200218171611-1c5ceed448ea/go.mod h1:xVJTA1E5o09AEbOOYYw5v2K+A+LMdAp7PEN/5bTgwEE=
+github.com/pip-services3-go/pip-services3-messaging-go v0.0.0-20200219061916-935cb669bf51 h1:1/QVNAWfVDO7x+EbybK6i7Y8rKRJhVKG0qP3TKU6fNA=
+github.com/pip-services3-go/pip-services3-messaging-go v0.0.0-20200219061916-935cb669bf51/go.mod h1:I0SqsE+Ee6rnq4xiw7ZB1G8lW/JpZQ5XgNxYxa7REDI=
 github.com/pmezard/go-difflib v1.0.0 h1:4DBwDE0NGyQoBHbLQYPwSUPoCMWR5BEzIk/f1lZbAQM=
 github.com/pmezard/go-difflib v1.0.0/go.mod h1:iKH77koFhYxTK1pcRnkKkqfTogsbg7gZNVY4sRDYZ/4=
 github.com/satori/go.uuid v1.2.0 h1:0uYX9dsZ2yD7q2RtLRtPSdGDWzjeM3TbMJP9utgA0ww=

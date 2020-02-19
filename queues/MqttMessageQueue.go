@@ -7,7 +7,7 @@ import (
 
 	cauth "github.com/pip-services3-go/pip-services3-components-go/auth"
 	ccon "github.com/pip-services3-go/pip-services3-components-go/connect"
-	msgqueues "github.com/pip-services3-go/pip-services3-messages-go/queues"
+	msgqueues "github.com/pip-services3-go/pip-services3-messaging-go/queues"
 	mcon "github.com/pip-services3-go/pip-services3-mqtt-go/connect"
 
 	mqtt "github.com/eclipse/paho.mqtt.golang"
