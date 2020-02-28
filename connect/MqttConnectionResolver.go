@@ -11,10 +11,10 @@ import (
 )
 
 /*
-Helper class that resolves MQTT connection and credential parameters,
+MqttConnectionResolver helper class that resolves MQTT connection and credential parameters,
 validates them and generates connection options.
 
-  Configuration parameters
+  Configuration parameters:
 
 - connection(s):
   - discovery_key:               (optional) a key to retrieve the connection from IDiscovery
@@ -26,44 +26,38 @@ validates them and generates connection options.
   - username:                    user name
   - password:                    user password
 
- References
+ References:
 
 - *:discovery:*:*:1.0          (optional) IDiscovery services to resolve connections
 - *:credential-store:*:*:1.0   (optional) Credential stores to resolve credentials
 */
-// implements IReferenceable, IConfigurable
 type MqttConnectionResolver struct {
-	/*
-	   The connections resolver.
-	*/
+	// The connections resolver.
 	ConnectionResolver *ccon.ConnectionResolver
-	/*
-	   The credentials resolver.
-	*/
+	//The credentials resolver.
 	CredentialResolver *cauth.CredentialResolver
 }
 
 func NewMqttConnectionResolver() *MqttConnectionResolver {
-	mcr := MqttConnectionResolver{}
-	mcr.ConnectionResolver = ccon.NewEmptyConnectionResolver()
-	mcr.CredentialResolver = cauth.NewEmptyCredentialResolver()
-	return &mcr
+	c := MqttConnectionResolver{}
+	c.ConnectionResolver = ccon.NewEmptyConnectionResolver()
+	c.CredentialResolver = cauth.NewEmptyCredentialResolver()
+	return &c
 }
 
-/*
-   Configures component by passing configuration parameters.
-   - config    configuration parameters to be set.
-*/
+// Configure are configures component by passing configuration parameters.
+// Parameters:
+// - config   *cconf.ConfigParams
+// configuration parameters to be set.
 func (c *MqttConnectionResolver) Configure(config *cconf.ConfigParams) {
 	c.ConnectionResolver.Configure(config)
 	c.CredentialResolver.Configure(config)
 }
 
-/*
-	Sets references to dependent components.
-
-	- references 	references to locate the component dependencies.
-*/
+// SetReferences are sets references to dependent components.
+// Parameters:
+// - references  cref.IReferences
+//	references to locate the component dependencies.
 func (c *MqttConnectionResolver) SetReferences(references cref.IReferences) {
 	c.ConnectionResolver.SetReferences(references)
 	c.CredentialResolver.SetReferences(references)
@@ -116,12 +110,12 @@ func (c *MqttConnectionResolver) composeOptions(connection *ccon.ConnectionParam
 	return options
 }
 
-/*
-   Resolves MQTT connection options from connection and credential parameters.
-
-   - correlationId     (optional) transaction id to trace execution through call chain.
-   - callback 			callback function that receives resolved options or error.
-*/
+// Resolves MQTT connection options from connection and credential parameters.
+// Parameters:
+//  - correlationId   string
+//  (optional) transaction id to trace execution through call chain.
+// Retruns options *cconf.ConfigParams, err error
+// receives resolved options or error.
 func (c *MqttConnectionResolver) Resolve(correlationId string) (options *cconf.ConfigParams, err error) {
 	var connection *ccon.ConnectionParams
 	var credential *cauth.CredentialParams
@@ -154,14 +148,13 @@ func (c *MqttConnectionResolver) Resolve(correlationId string) (options *cconf.C
 	return options, nil
 }
 
-/*
-   Composes MQTT connection options from connection and credential parameters.
-
-   - correlationId     (optional) transaction id to trace execution through call chain.
-   - connection        connection parameters
-   - credential        credential parameters
-   - callback 			callback function that receives resolved options or error.
-*/
+// Compose method are composes MQTT connection options from connection and credential parameters.
+// Parameters:
+//    - correlationId  string  (optional) transaction id to trace execution through call chain.
+//    - connection  *ccon.ConnectionParams    connection parameters
+//    - credential  *cauth.CredentialParams   credential parameters
+// Returns: options *cconf.ConfigParams, err error
+// resolved options or error.
 func (c *MqttConnectionResolver) Compose(correlationId string, connection *ccon.ConnectionParams, credential *cauth.CredentialParams) (options *cconf.ConfigParams, err error) {
 	// Validate connections
 	err = c.validateConnection(correlationId, connection)

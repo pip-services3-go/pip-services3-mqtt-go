@@ -6,26 +6,22 @@ import (
 	mqueue "github.com/pip-services3-go/pip-services3-mqtt-go/queues"
 )
 
-/*
-Creates MqttMessageQueue components by their descriptors.
-See MqttMessageQueue
-*/
+// DefaultMqttFactory are creates MqttMessageQueue components by their descriptors.
+// See MqttMessageQueue
 type DefaultMqttFactory struct {
 	cbuild.Factory
 	Descriptor          *cref.Descriptor
 	MqttQueueDescriptor *cref.Descriptor
 }
 
-/**
-Create a new instance of the factory.
-*/
+// NewDefaultMqttFactory are create a new instance of the factory.
 func NewDefaultMqttFactory() *DefaultMqttFactory {
-	dmf := DefaultMqttFactory{}
-	dmf.Factory = *cbuild.NewFactory()
-	dmf.Descriptor = cref.NewDescriptor("pip-services", "factory", "mqtt", "default", "1.0")
-	dmf.MqttQueueDescriptor = cref.NewDescriptor("pip-services", "message-queue", "mqtt", "*", "1.0")
-	dmf.Register(dmf.MqttQueueDescriptor, func() interface{} {
-		return mqueue.NewMqttMessageQueue(dmf.MqttQueueDescriptor.Name())
+	c := DefaultMqttFactory{}
+	c.Factory = *cbuild.NewFactory()
+	c.Descriptor = cref.NewDescriptor("pip-services", "factory", "mqtt", "default", "1.0")
+	c.MqttQueueDescriptor = cref.NewDescriptor("pip-services", "message-queue", "mqtt", "*", "1.0")
+	c.Register(c.MqttQueueDescriptor, func() interface{} {
+		return mqueue.NewMqttMessageQueue(c.MqttQueueDescriptor.Name())
 	})
-	return &dmf
+	return &c
 }

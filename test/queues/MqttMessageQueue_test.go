@@ -15,8 +15,6 @@ var queue *mqueue.MqttMessageQueue
 
 func TestMqttMessageQueue(t *testing.T) {
 
-	//var fixture *MessageQueueFixture
-
 	brokerHost := os.Getenv("MOSQUITTO_HOST")
 	if brokerHost == "" {
 		brokerHost = "localhost"
@@ -45,18 +43,12 @@ func TestMqttMessageQueue(t *testing.T) {
 	queue = mqueue.NewMqttMessageQueue("testQueue")
 	queue.Configure(queueConfig)
 
-	//fixture = NewMessageQueueFixture(queue)
-
 	qOpnErr := queue.Open("")
 	if qOpnErr == nil {
 		queue.Clear("")
 	}
 
 	defer queue.Close("")
-
-	// t.Run("Receive and Send Message", fixture.TestReceiveSendMessage)
-	// queue.Clear("")
-	// t.Run("On Message", fixture.TestOnMessage)
 
 	t.Run("Receive and Send Message", ReceiveAndSendMessage)
 	queue.Clear("")
