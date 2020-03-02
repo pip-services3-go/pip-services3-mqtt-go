@@ -4,7 +4,7 @@ Configuration structure follows the
 [standard configuration](https://github.com/pip-services/pip-services3-container-node/doc/Configuration.md) 
 structure. 
 
-### <a name="log_elasticsearch"></a> Elasticsearch
+### <a name="mqtt_messaging"></a> MQTT messaging
 
 MQTT messaging service has the following configuration properties:
 - topic:                         name of MQTT topic to subscribe
