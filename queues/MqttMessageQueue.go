@@ -364,8 +364,8 @@ See receive
 */
 func (c *MqttMessageQueue) Listen(correlationId string, receiver msgqueues.IMessageReceiver) {
 	c.receiver = receiver
-	var wg = sync.WaitGroup{}
-	wg.Add(1)
+	// var wg = sync.WaitGroup{}
+	// wg.Add(1)
 	go func() {
 		var message *msgqueues.MessageEnvelope
 		for len(c.messages) > 0 && c.receiver != nil {
@@ -381,10 +381,10 @@ func (c *MqttMessageQueue) Listen(correlationId string, receiver msgqueues.IMess
 			}
 		}
 		c.Subscribe()
-		wg.Done()
+		//wg.Done()
 	}()
 
-	wg.Wait()
+	//wg.Wait()
 }
 
 // EndListen method are ends listening for incoming messages.
