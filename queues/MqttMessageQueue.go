@@ -55,12 +55,11 @@ Example:
 
     queue.Send("123", NewMessageEnvelope("", "mymessage", "ABC"))
 
-	message, err := queue.Receive("123")
-    	if (message != nil) {
+    message, err := queue.Receive("123")
+        if (message != nil) {
            ...
            queue.Complete("123", message);
         }
-
 */
 type MqttMessageQueue struct {
 	*msgqueues.MessageQueue
@@ -73,7 +72,7 @@ type MqttMessageQueue struct {
 }
 
 // NewMqttMessageQueue are creates a new instance of the message queue.
-// - name  string (optional) a queue name.
+//   - name  string (optional) a queue name.
 func NewMqttMessageQueue(name string) *MqttMessageQueue {
 	c := MqttMessageQueue{}
 	c.MessageQueue = msgqueues.NewMessageQueue(name)
@@ -92,9 +91,9 @@ func (c *MqttMessageQueue) IsOpen() bool {
 
 // Opens the component with given connection and credential parameters.
 // Parameters:
-// - correlationId     (optional) transaction id to trace execution through call chain.
-// - connection        connection parameters
-// - credential        credential parameters
+//   - correlationId     (optional) transaction id to trace execution through call chain.
+//   - connection        connection parameters
+//   - credential        credential parameters
 // Returns 	error
 // error or nil no errors occured.
 func (c *MqttMessageQueue) OpenWithParams(correlationId string, connection *ccon.ConnectionParams, credential *cauth.CredentialParams) (err error) {
@@ -129,7 +128,7 @@ func (c *MqttMessageQueue) OpenWithParams(correlationId string, connection *ccon
 
 // Close method are Closes component and frees used resources.
 // Parameters:
-// - correlationId string 	(optional) transaction id to trace execution through call chain.
+//   - correlationId string 	(optional) transaction id to trace execution through call chain.
 // Retruns error
 // error or nil no errors occured.
 func (c *MqttMessageQueue) Close(correlationId string) (err error) {
@@ -146,7 +145,7 @@ func (c *MqttMessageQueue) Close(correlationId string) (err error) {
 
 // Clear method are clears component state.
 // Parameters:
-// - correlationId 	string (optional) transaction id to trace execution through call chain.
+//   - correlationId 	string (optional) transaction id to trace execution through call chain.
 // Retruns error or nil no errors occured.
 func (c *MqttMessageQueue) Clear(correlationId string) (err error) {
 	c.messages = make([]msgqueues.MessageEnvelope, 0)
@@ -165,8 +164,8 @@ func (c *MqttMessageQueue) ReadMessageCount() (count int64, err error) {
 
 // Send method are sends a message into the queue.
 // Parameters:
-// - correlationId string    (optional) transaction id to trace execution through call chain.
-// - envelope *msgqueues.MessageEnvelope  a message envelop to be sent.
+//   - correlationId string    (optional) transaction id to trace execution through call chain.
+//   - envelope *msgqueues.MessageEnvelope  a message envelop to be sent.
 // Returns: error
 // error or nil for success.
 func (c *MqttMessageQueue) Send(correlationId string, envelop *msgqueues.MessageEnvelope) (err error) {
@@ -180,7 +179,7 @@ func (c *MqttMessageQueue) Send(correlationId string, envelop *msgqueues.Message
 // Peek method are peeks a single incoming message from the queue without removing it.
 // If there are no messages available in the queue it returns nil.
 // Parameters:
-// - correlationId  string  (optional) transaction id to trace execution through call chain.
+//   - correlationId  string  (optional) transaction id to trace execution through call chain.
 // Returns: result *msgqueues.MessageEnvelope, err error
 // message or error.
 func (c *MqttMessageQueue) Peek(correlationId string) (result *msgqueues.MessageEnvelope, err error) {
@@ -198,8 +197,8 @@ func (c *MqttMessageQueue) Peek(correlationId string) (result *msgqueues.Message
 // If there are no messages available in the queue it returns an empty list.
 // Important: This method is not supported by MQTT.
 // Parameters:
-// - correlationId     (optional) transaction id to trace execution through call chain.
-// - messageCount      a maximum number of messages to peek.
+//   - correlationId     (optional) transaction id to trace execution through call chain.
+//   - messageCount      a maximum number of messages to peek.
 // Returns:          callback function that receives a list with messages or error.
 func (c *MqttMessageQueue) PeekBatch(correlationId string, messageCount int64) (result []msgqueues.MessageEnvelope, err error) {
 	// Subscribe to get messages
@@ -209,8 +208,8 @@ func (c *MqttMessageQueue) PeekBatch(correlationId string, messageCount int64) (
 
 // Receive method are receives an incoming message and removes it from the queue.
 // Parameters:
-// - correlationId   string   (optional) transaction id to trace execution through call chain.
-// - waitTimeout  time.Duration     a timeout in milliseconds to wait for a message to come.
+//  - correlationId   string   (optional) transaction id to trace execution through call chain.
+//  - waitTimeout  time.Duration     a timeout in milliseconds to wait for a message to come.
 // Returns:  result *msgqueues.MessageEnvelope, err error
 // receives a message or error.
 func (c *MqttMessageQueue) Receive(correlationId string, waitTimeout time.Duration) (result *msgqueues.MessageEnvelope, err error) {
@@ -260,8 +259,8 @@ func (c *MqttMessageQueue) Receive(correlationId string, waitTimeout time.Durati
 // This method is usually used to extend the message processing time.
 // Important: This method is not supported by MQTT.
 // Parameters:
-// - message   *msgqueues.MessageEnvelope    a message to extend its lock.
-// - lockTimeout  time.Duration  a locking timeout in milliseconds.
+//   - message   *msgqueues.MessageEnvelope    a message to extend its lock.
+//   - lockTimeout  time.Duration  a locking timeout in milliseconds.
 // Returns: error
 // receives an error or nil for success.
 func (c *MqttMessageQueue) RenewLock(message *msgqueues.MessageEnvelope, lockTimeout time.Duration) (err error) {
@@ -273,7 +272,7 @@ func (c *MqttMessageQueue) RenewLock(message *msgqueues.MessageEnvelope, lockTim
 // This method is usually used to remove the message after successful processing.
 // Important: This method is not supported by MQTT.
 // Parameters:
-// - message  *msgqueues.MessageEnvelope a message to remove.
+//   - message  *msgqueues.MessageEnvelope a message to remove.
 // Returns: error
 // error or nil for success.
 func (c *MqttMessageQueue) Complete(message *msgqueues.MessageEnvelope) (err error) {
@@ -287,7 +286,7 @@ func (c *MqttMessageQueue) Complete(message *msgqueues.MessageEnvelope) (err err
 // or/and send to dead letter queue.
 // Important: This method is not supported by MQTT.
 // Parameters:
-// - message *msgqueues.MessageEnvelope  a message to return.
+//   - message *msgqueues.MessageEnvelope  a message to return.
 // Returns: error
 //  error or nil for success.
 func (c *MqttMessageQueue) Abandon(message *msgqueues.MessageEnvelope) (err error) {
@@ -298,7 +297,7 @@ func (c *MqttMessageQueue) Abandon(message *msgqueues.MessageEnvelope) (err erro
 // Permanently removes a message from the queue and sends it to dead letter queue.
 // Important: This method is not supported by MQTT.
 // Parameters:
-// - message  *msgqueues.MessageEnvelope a message to be removed.
+//   - message  *msgqueues.MessageEnvelope a message to be removed.
 // Returns: error
 //  error or nil for success.
 func (c *MqttMessageQueue) MoveToDeadLetter(message *msgqueues.MessageEnvelope) (err error) {
@@ -356,8 +355,8 @@ func (c *MqttMessageQueue) Subscribe() {
 /*
 Listens for incoming messages and blocks the current thread until queue is closed.
 Parameters:
-- correlationId   string  (optional) transaction id to trace execution through call chain.
-- receiver    msgqueues.IMessageReceiver      a receiver to receive incoming messages.
+  - correlationId   string  (optional) transaction id to trace execution through call chain.
+  - receiver    msgqueues.IMessageReceiver      a receiver to receive incoming messages.
 
 See IMessageReceiver
 See receive
@@ -390,7 +389,7 @@ func (c *MqttMessageQueue) Listen(correlationId string, receiver msgqueues.IMess
 // EndListen method are ends listening for incoming messages.
 // When this method is call listen unblocks the thread and execution continues.
 // Parameters:
-// - correlationId  string   (optional) transaction id to trace execution through call chain.
+//   - correlationId  string   (optional) transaction id to trace execution through call chain.
 func (c *MqttMessageQueue) EndListen(correlationId string) {
 	c.receiver = nil
 	if c.subscribed {
