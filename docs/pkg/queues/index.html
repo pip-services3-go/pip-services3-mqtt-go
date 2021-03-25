@@ -120,16 +120,19 @@
 				
 				
 					
-					<dd>&nbsp; &nbsp; <a href="index.html#MqttMessageQueue.Abandon">func (c *MqttMessageQueue) Abandon(message *msgqueues.MessageEnvelope) (err error)</a></dd>
+					<dd>&nbsp; &nbsp; <a href="index.html#MqttMessageQueue.Abandon">func (c *MqttMessageQueue) Abandon(message *cqueues.MessageEnvelope) error</a></dd>
 				
 					
-					<dd>&nbsp; &nbsp; <a href="index.html#MqttMessageQueue.Clear">func (c *MqttMessageQueue) Clear(correlationId string) (err error)</a></dd>
+					<dd>&nbsp; &nbsp; <a href="index.html#MqttMessageQueue.Clear">func (c *MqttMessageQueue) Clear(correlationId string) error</a></dd>
 				
 					
 					<dd>&nbsp; &nbsp; <a href="index.html#MqttMessageQueue.Close">func (c *MqttMessageQueue) Close(correlationId string) (err error)</a></dd>
 				
 					
-					<dd>&nbsp; &nbsp; <a href="index.html#MqttMessageQueue.Complete">func (c *MqttMessageQueue) Complete(message *msgqueues.MessageEnvelope) (err error)</a></dd>
+					<dd>&nbsp; &nbsp; <a href="index.html#MqttMessageQueue.Complete">func (c *MqttMessageQueue) Complete(message *cqueues.MessageEnvelope) error</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#MqttMessageQueue.Configure">func (c *MqttMessageQueue) Configure(config *cconf.ConfigParams)</a></dd>
 				
 					
 					<dd>&nbsp; &nbsp; <a href="index.html#MqttMessageQueue.EndListen">func (c *MqttMessageQueue) EndListen(correlationId string)</a></dd>
@@ -138,34 +141,43 @@
 					<dd>&nbsp; &nbsp; <a href="index.html#MqttMessageQueue.IsOpen">func (c *MqttMessageQueue) IsOpen() bool</a></dd>
 				
 					
-					<dd>&nbsp; &nbsp; <a href="index.html#MqttMessageQueue.Listen">func (c *MqttMessageQueue) Listen(correlationId string, receiver msgqueues.IMessageReceiver)</a></dd>
+					<dd>&nbsp; &nbsp; <a href="index.html#MqttMessageQueue.Listen">func (c *MqttMessageQueue) Listen(correlationId string, receiver cqueues.IMessageReceiver) error</a></dd>
 				
 					
-					<dd>&nbsp; &nbsp; <a href="index.html#MqttMessageQueue.MoveToDeadLetter">func (c *MqttMessageQueue) MoveToDeadLetter(message *msgqueues.MessageEnvelope) (err error)</a></dd>
+					<dd>&nbsp; &nbsp; <a href="index.html#MqttMessageQueue.MoveToDeadLetter">func (c *MqttMessageQueue) MoveToDeadLetter(message *cqueues.MessageEnvelope) error</a></dd>
 				
 					
-					<dd>&nbsp; &nbsp; <a href="index.html#MqttMessageQueue.OpenWithParams">func (c *MqttMessageQueue) OpenWithParams(correlationId string, connection *ccon.ConnectionParams, credential *cauth.CredentialParams) (err error)</a></dd>
+					<dd>&nbsp; &nbsp; <a href="index.html#MqttMessageQueue.OnMessage">func (c *MqttMessageQueue) OnMessage(msg mqtt.Message)</a></dd>
 				
 					
-					<dd>&nbsp; &nbsp; <a href="index.html#MqttMessageQueue.Peek">func (c *MqttMessageQueue) Peek(correlationId string) (result *msgqueues.MessageEnvelope, err error)</a></dd>
+					<dd>&nbsp; &nbsp; <a href="index.html#MqttMessageQueue.Open">func (c *MqttMessageQueue) Open(correlationId string) (err error)</a></dd>
 				
 					
-					<dd>&nbsp; &nbsp; <a href="index.html#MqttMessageQueue.PeekBatch">func (c *MqttMessageQueue) PeekBatch(correlationId string, messageCount int64) (result []msgqueues.MessageEnvelope, err error)</a></dd>
+					<dd>&nbsp; &nbsp; <a href="index.html#MqttMessageQueue.OpenWithParams">func (c *MqttMessageQueue) OpenWithParams(correlationId string, connections []*cconn.ConnectionParams, credential *cauth.CredentialParams) error</a></dd>
 				
 					
-					<dd>&nbsp; &nbsp; <a href="index.html#MqttMessageQueue.ReadMessageCount">func (c *MqttMessageQueue) ReadMessageCount() (count int64, err error)</a></dd>
+					<dd>&nbsp; &nbsp; <a href="index.html#MqttMessageQueue.Peek">func (c *MqttMessageQueue) Peek(correlationId string) (*cqueues.MessageEnvelope, error)</a></dd>
 				
 					
-					<dd>&nbsp; &nbsp; <a href="index.html#MqttMessageQueue.Receive">func (c *MqttMessageQueue) Receive(correlationId string, waitTimeout time.Duration) (result *msgqueues.MessageEnvelope, err error)</a></dd>
+					<dd>&nbsp; &nbsp; <a href="index.html#MqttMessageQueue.PeekBatch">func (c *MqttMessageQueue) PeekBatch(correlationId string, messageCount int64) ([]*cqueues.MessageEnvelope, error)</a></dd>
 				
 					
-					<dd>&nbsp; &nbsp; <a href="index.html#MqttMessageQueue.RenewLock">func (c *MqttMessageQueue) RenewLock(message *msgqueues.MessageEnvelope, lockTimeout time.Duration) (err error)</a></dd>
+					<dd>&nbsp; &nbsp; <a href="index.html#MqttMessageQueue.ReadMessageCount">func (c *MqttMessageQueue) ReadMessageCount() (int64, error)</a></dd>
 				
 					
-					<dd>&nbsp; &nbsp; <a href="index.html#MqttMessageQueue.Send">func (c *MqttMessageQueue) Send(correlationId string, envelop *msgqueues.MessageEnvelope) (err error)</a></dd>
+					<dd>&nbsp; &nbsp; <a href="index.html#MqttMessageQueue.Receive">func (c *MqttMessageQueue) Receive(correlationId string, waitTimeout time.Duration) (*cqueues.MessageEnvelope, error)</a></dd>
 				
 					
-					<dd>&nbsp; &nbsp; <a href="index.html#MqttMessageQueue.Subscribe">func (c *MqttMessageQueue) Subscribe()</a></dd>
+					<dd>&nbsp; &nbsp; <a href="index.html#MqttMessageQueue.RenewLock">func (c *MqttMessageQueue) RenewLock(message *cqueues.MessageEnvelope, lockTimeout time.Duration) (err error)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#MqttMessageQueue.Send">func (c *MqttMessageQueue) Send(correlationId string, envelop *cqueues.MessageEnvelope) error</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#MqttMessageQueue.SetReferences">func (c *MqttMessageQueue) SetReferences(references cref.IReferences)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#MqttMessageQueue.UnsetReferences">func (c *MqttMessageQueue) UnsetReferences()</a></dd>
 				
 			
 			
@@ -195,16 +207,13 @@
 		
 			
 			
-			<h2 id="MqttMessageQueue">type <a href="http://localhost:6060/src/queues/MqttMessageQueue.go?s=2040:2307#L54">MqttMessageQueue</a>
+			<h2 id="MqttMessageQueue">type <a href="http://localhost:6060/src/queues/MqttMessageQueue.go?s=3151:3729#L69">MqttMessageQueue</a>
 				<a class="permalink" href="index.html#MqttMessageQueue">&#xb6;</a>
 				
 				
 			</h2>
 			<p>
 MqttMessageQueue are message queue that sends and receives messages via MQTT message broker.
-</p>
-<p>
-MQTT is a popular light-weight protocol to communicate IoT devices.
 </p>
 <pre>Configuration parameters:
 </pre>
@@ -220,9 +229,20 @@ MQTT is a popular light-weight protocol to communicate IoT devices.
 <p>
 - credential(s):
 </p>
-<pre> - store_key:                   (optional) a key to retrieve the credentials from  ICredentialStore
- - username:                    user name
- - password:                    user password
+<pre>- store_key:                   (optional) a key to retrieve the credentials from  ICredentialStore
+- username:                    user name
+- password:                    user password
+</pre>
+<p>
+- options:
+</p>
+<pre> - serialize_message:    (optional) true to serialize entire message as JSON, false to send only message payload (default: true)
+ - qos:                  (optional) quality of service level aka QOS (default: 0)
+ - retain:               (optional) retention flag for published messages (default: false)
+ - retry_connect:        (optional) turns on/off automated reconnect when connection is log (default: true)
+ - connect_timeout:      (optional) number of milliseconds to wait for connection (default: 30000)
+ - reconnect_timeout:    (optional) number of milliseconds to wait on each reconnection attempt (default: 1000)
+ - keepalive_timeout:    (optional) number of milliseconds to ping broker while inactive (default: 3000)
 
 References:
 </pre>
@@ -231,6 +251,7 @@ References:
 - *:counters:*:*:1.0           (optional)  ICounters components to pass collected measurements
 - *:discovery:*:*:1.0          (optional)  IDiscovery services to resolve connections
 - *:credential-store:*:*:1.0   (optional) Credential stores to resolve credentials
+- *:connection:mqtt:*:1.0      (optional) Shared connection to MQTT service
 </p>
 <p>
 See MessageQueue
@@ -239,27 +260,34 @@ See MessagingCapabilities
 <p>
 Example:
 </p>
-<pre>queue := NewMqttMessageQueue(&#34;myqueue&#34;)
-queue.Configure(cconf.NewConfigParamsFromTuples(
-  &#34;topic&#34;, &#34;mytopic&#34;,
-  &#34;connection.protocol&#34;, &#34;mqtt&#34;
-  &#34;connection.host&#34;, &#34;localhost&#34;
-  &#34;connection.port&#34;, 1883
-))
+<pre>    queue := NewMqttMessageQueue(&#34;myqueue&#34;)
+    queue.Configure(cconf.NewConfigParamsFromTuples(
+      &#34;subject&#34;, &#34;mytopic&#34;,
+      &#34;connection.protocol&#34;, &#34;mqtt&#34;
+      &#34;connection.host&#34;, &#34;localhost&#34;
+      &#34;connection.port&#34;, 1883
+    ))
 
-queue.open(&#34;123&#34;)
+    queue.open(&#34;123&#34;)
 
-queue.Send(&#34;123&#34;, NewMessageEnvelope(&#34;&#34;, &#34;mymessage&#34;, &#34;ABC&#34;))
+    queue.Send(&#34;123&#34;, NewMessageEnvelope(&#34;&#34;, &#34;mymessage&#34;, &#34;ABC&#34;))
 
-message, err := queue.Receive(&#34;123&#34;)
-    if (message != nil) {
-       ...
-       queue.Complete(&#34;123&#34;, message);
-    }
+    message, err := queue.Receive(&#34;123&#34;)
+	if (message != nil) {
+		...
+		queue.Complete(&#34;123&#34;, message);
+	}
 </pre>
 
 			<pre>type MqttMessageQueue struct {
-    *<a href="http://localhost:6060/pkg/github.com/pip-services3-go/pip-services3-messaging-go/queues/">msgqueues</a>.<a href="http://localhost:6060/pkg/github.com/pip-services3-go/pip-services3-messaging-go/queues/#MessageQueue">MessageQueue</a>
+    <a href="http://localhost:6060/pkg/github.com/pip-services3-go/pip-services3-messaging-go/queues/">cqueues</a>.<a href="http://localhost:6060/pkg/github.com/pip-services3-go/pip-services3-messaging-go/queues/#MessageQueue">MessageQueue</a>
+
+    <span class="comment">//The dependency resolver.</span>
+<span id="MqttMessageQueue.DependencyResolver"></span>    DependencyResolver *<a href="http://localhost:6060/pkg/github.com/pip-services3-go/pip-services3-commons-go/refer/">cref</a>.<a href="http://localhost:6060/pkg/github.com/pip-services3-go/pip-services3-commons-go/refer/#DependencyResolver">DependencyResolver</a>
+    <span class="comment">//The logger.</span>
+<span id="MqttMessageQueue.Logger"></span>    Logger *<a href="http://localhost:6060/pkg/github.com/pip-services3-go/pip-services3-components-go/log/">clog</a>.<a href="http://localhost:6060/pkg/github.com/pip-services3-go/pip-services3-components-go/log/#CompositeLogger">CompositeLogger</a>
+    <span class="comment">//The MQTT connection component.</span>
+<span id="MqttMessageQueue.Connection"></span>    Connection *<a href="http://localhost:6060/pkg/github.com/pip-services3-go/pip-services3-mqtt-go/connect/">connect</a>.<a href="http://localhost:6060/pkg/github.com/pip-services3-go/pip-services3-mqtt-go/connect/#MqttConnection">MqttConnection</a>
     <span class="comment">// contains filtered or unexported fields</span>
 }
 </pre>
@@ -274,16 +302,16 @@ message, err := queue.Receive(&#34;123&#34;)
 
 			
 				
-				<h3 id="NewMqttMessageQueue">func <a href="http://localhost:6060/src/queues/MqttMessageQueue.go?s=2426:2481#L66">NewMqttMessageQueue</a>
+				<h3 id="NewMqttMessageQueue">func <a href="http://localhost:6060/src/queues/MqttMessageQueue.go?s=3821:3876#L95">NewMqttMessageQueue</a>
 					<a class="permalink" href="index.html#NewMqttMessageQueue">&#xb6;</a>
 					
 					
 				</h3>
 				<pre>func NewMqttMessageQueue(name <a href="http://localhost:6060/pkg/builtin/#string">string</a>) *<a href="index.html#MqttMessageQueue">MqttMessageQueue</a></pre>
 				<p>
-NewMqttMessageQueue are creates a new instance of the message queue.
+Creates a new instance of the queue component.
 </p>
-<pre>- name  string (optional) a queue name.
+<pre>- name    (optional) a queue name.
 </pre>
 
 				
@@ -292,12 +320,12 @@ NewMqttMessageQueue are creates a new instance of the message queue.
 
 			
 				
-				<h3 id="MqttMessageQueue.Abandon">func (*MqttMessageQueue) <a href="http://localhost:6060/src/queues/MqttMessageQueue.go?s=10313:10395#L282">Abandon</a>
+				<h3 id="MqttMessageQueue.Abandon">func (*MqttMessageQueue) <a href="http://localhost:6060/src/queues/MqttMessageQueue.go?s=17387:17461#L542">Abandon</a>
 					<a class="permalink" href="index.html#MqttMessageQueue.Abandon">&#xb6;</a>
 					
 					
 				</h3>
-				<pre>func (c *<a href="index.html#MqttMessageQueue">MqttMessageQueue</a>) Abandon(message *<a href="http://localhost:6060/pkg/github.com/pip-services3-go/pip-services3-messaging-go/queues/">msgqueues</a>.<a href="http://localhost:6060/pkg/github.com/pip-services3-go/pip-services3-messaging-go/queues/#MessageEnvelope">MessageEnvelope</a>) (err <a href="http://localhost:6060/pkg/builtin/#error">error</a>)</pre>
+				<pre>func (c *<a href="index.html#MqttMessageQueue">MqttMessageQueue</a>) Abandon(message *<a href="http://localhost:6060/pkg/github.com/pip-services3-go/pip-services3-messaging-go/queues/">cqueues</a>.<a href="http://localhost:6060/pkg/github.com/pip-services3-go/pip-services3-messaging-go/queues/#MessageEnvelope">MessageEnvelope</a>) <a href="http://localhost:6060/pkg/builtin/#error">error</a></pre>
 				<p>
 Abandon method are returnes message into the queue and makes it available for all subscribers to receive it again.
 This method is usually used to return a message which could not be processed at the moment
@@ -306,7 +334,7 @@ or/and send to dead letter queue.
 Important: This method is not supported by MQTT.
 Parameters:
 </p>
-<pre>- message *msgqueues.MessageEnvelope  a message to return.
+<pre>- message *cqueues.MessageEnvelope  a message to return.
 </pre>
 <p>
 Returns: error
@@ -319,12 +347,12 @@ Returns: error
 				
 			
 				
-				<h3 id="MqttMessageQueue.Clear">func (*MqttMessageQueue) <a href="http://localhost:6060/src/queues/MqttMessageQueue.go?s=4889:4955#L140">Clear</a>
+				<h3 id="MqttMessageQueue.Clear">func (*MqttMessageQueue) <a href="http://localhost:6060/src/queues/MqttMessageQueue.go?s=11500:11560#L361">Clear</a>
 					<a class="permalink" href="index.html#MqttMessageQueue.Clear">&#xb6;</a>
 					
 					
 				</h3>
-				<pre>func (c *<a href="index.html#MqttMessageQueue">MqttMessageQueue</a>) Clear(correlationId <a href="http://localhost:6060/pkg/builtin/#string">string</a>) (err <a href="http://localhost:6060/pkg/builtin/#error">error</a>)</pre>
+				<pre>func (c *<a href="index.html#MqttMessageQueue">MqttMessageQueue</a>) Clear(correlationId <a href="http://localhost:6060/pkg/builtin/#string">string</a>) <a href="http://localhost:6060/pkg/builtin/#error">error</a></pre>
 				<p>
 Clear method are clears component state.
 Parameters:
@@ -332,7 +360,7 @@ Parameters:
 <pre>- correlationId 	string (optional) transaction id to trace execution through call chain.
 </pre>
 <p>
-Retruns error or nil no errors occured.
+Returns error or nil no errors occured.
 </p>
 
 				
@@ -340,41 +368,37 @@ Retruns error or nil no errors occured.
 				
 			
 				
-				<h3 id="MqttMessageQueue.Close">func (*MqttMessageQueue) <a href="http://localhost:6060/src/queues/MqttMessageQueue.go?s=4392:4458#L124">Close</a>
+				<h3 id="MqttMessageQueue.Close">func (*MqttMessageQueue) <a href="http://localhost:6060/src/queues/MqttMessageQueue.go?s=8019:8085#L231">Close</a>
 					<a class="permalink" href="index.html#MqttMessageQueue.Close">&#xb6;</a>
 					
 					
 				</h3>
 				<pre>func (c *<a href="index.html#MqttMessageQueue">MqttMessageQueue</a>) Close(correlationId <a href="http://localhost:6060/pkg/builtin/#string">string</a>) (err <a href="http://localhost:6060/pkg/builtin/#error">error</a>)</pre>
 				<p>
-Close method are Closes component and frees used resources.
-Parameters:
+Closes component and frees used resources.
 </p>
-<pre>- correlationId string 	(optional) transaction id to trace execution through call chain.
+<pre>- correlationId 	(optional) transaction id to trace execution through call chain.
+- Returns 			error or nil no errors occured.
 </pre>
-<p>
-Retruns error
-error or nil no errors occured.
-</p>
 
 				
 				
 				
 			
 				
-				<h3 id="MqttMessageQueue.Complete">func (*MqttMessageQueue) <a href="http://localhost:6060/src/queues/MqttMessageQueue.go?s=9670:9753#L268">Complete</a>
+				<h3 id="MqttMessageQueue.Complete">func (*MqttMessageQueue) <a href="http://localhost:6060/src/queues/MqttMessageQueue.go?s=16754:16829#L528">Complete</a>
 					<a class="permalink" href="index.html#MqttMessageQueue.Complete">&#xb6;</a>
 					
 					
 				</h3>
-				<pre>func (c *<a href="index.html#MqttMessageQueue">MqttMessageQueue</a>) Complete(message *<a href="http://localhost:6060/pkg/github.com/pip-services3-go/pip-services3-messaging-go/queues/">msgqueues</a>.<a href="http://localhost:6060/pkg/github.com/pip-services3-go/pip-services3-messaging-go/queues/#MessageEnvelope">MessageEnvelope</a>) (err <a href="http://localhost:6060/pkg/builtin/#error">error</a>)</pre>
+				<pre>func (c *<a href="index.html#MqttMessageQueue">MqttMessageQueue</a>) Complete(message *<a href="http://localhost:6060/pkg/github.com/pip-services3-go/pip-services3-messaging-go/queues/">cqueues</a>.<a href="http://localhost:6060/pkg/github.com/pip-services3-go/pip-services3-messaging-go/queues/#MessageEnvelope">MessageEnvelope</a>) <a href="http://localhost:6060/pkg/builtin/#error">error</a></pre>
 				<p>
 Complete method are permanently removes a message from the queue.
 This method is usually used to remove the message after successful processing.
 Important: This method is not supported by MQTT.
 Parameters:
 </p>
-<pre>- message  *msgqueues.MessageEnvelope a message to remove.
+<pre>- message  *cqueues.MessageEnvelope a message to remove.
 </pre>
 <p>
 Returns: error
@@ -386,7 +410,24 @@ error or nil for success.
 				
 			
 				
-				<h3 id="MqttMessageQueue.EndListen">func (*MqttMessageQueue) <a href="http://localhost:6060/src/queues/MqttMessageQueue.go?s=13243:13301#L383">EndListen</a>
+				<h3 id="MqttMessageQueue.Configure">func (*MqttMessageQueue) <a href="http://localhost:6060/src/queues/MqttMessageQueue.go?s=4682:4746#L121">Configure</a>
+					<a class="permalink" href="index.html#MqttMessageQueue.Configure">&#xb6;</a>
+					
+					
+				</h3>
+				<pre>func (c *<a href="index.html#MqttMessageQueue">MqttMessageQueue</a>) Configure(config *<a href="http://localhost:6060/pkg/github.com/pip-services3-go/pip-services3-commons-go/config/">cconf</a>.<a href="http://localhost:6060/pkg/github.com/pip-services3-go/pip-services3-commons-go/config/#ConfigParams">ConfigParams</a>)</pre>
+				<p>
+Configures component by passing configuration parameters.
+</p>
+<pre>- config    configuration parameters to be set.
+</pre>
+
+				
+				
+				
+			
+				
+				<h3 id="MqttMessageQueue.EndListen">func (*MqttMessageQueue) <a href="http://localhost:6060/src/queues/MqttMessageQueue.go?s=19513:19571#L612">EndListen</a>
 					<a class="permalink" href="index.html#MqttMessageQueue.EndListen">&#xb6;</a>
 					
 					
@@ -405,15 +446,15 @@ Parameters:
 				
 			
 				
-				<h3 id="MqttMessageQueue.IsOpen">func (*MqttMessageQueue) <a href="http://localhost:6060/src/queues/MqttMessageQueue.go?s=2920:2960#L78">IsOpen</a>
+				<h3 id="MqttMessageQueue.IsOpen">func (*MqttMessageQueue) <a href="http://localhost:6060/src/queues/MqttMessageQueue.go?s=6292:6332#L172">IsOpen</a>
 					<a class="permalink" href="index.html#MqttMessageQueue.IsOpen">&#xb6;</a>
 					
 					
 				</h3>
 				<pre>func (c *<a href="index.html#MqttMessageQueue">MqttMessageQueue</a>) IsOpen() <a href="http://localhost:6060/pkg/builtin/#bool">bool</a></pre>
 				<p>
-IsOpen methos are checks if the component is opened.
-Return true if the component has been opened and false otherwise.
+Checks if the component is opened.
+Returns true if the component has been opened and false otherwise.
 </p>
 
 				
@@ -421,18 +462,18 @@ Return true if the component has been opened and false otherwise.
 				
 			
 				
-				<h3 id="MqttMessageQueue.Listen">func (*MqttMessageQueue) <a href="http://localhost:6060/src/queues/MqttMessageQueue.go?s=12407:12499#L354">Listen</a>
+				<h3 id="MqttMessageQueue.Listen">func (*MqttMessageQueue) <a href="http://localhost:6060/src/queues/MqttMessageQueue.go?s=18672:18768#L581">Listen</a>
 					<a class="permalink" href="index.html#MqttMessageQueue.Listen">&#xb6;</a>
 					
 					
 				</h3>
-				<pre>func (c *<a href="index.html#MqttMessageQueue">MqttMessageQueue</a>) Listen(correlationId <a href="http://localhost:6060/pkg/builtin/#string">string</a>, receiver <a href="http://localhost:6060/pkg/github.com/pip-services3-go/pip-services3-messaging-go/queues/">msgqueues</a>.<a href="http://localhost:6060/pkg/github.com/pip-services3-go/pip-services3-messaging-go/queues/#IMessageReceiver">IMessageReceiver</a>)</pre>
+				<pre>func (c *<a href="index.html#MqttMessageQueue">MqttMessageQueue</a>) Listen(correlationId <a href="http://localhost:6060/pkg/builtin/#string">string</a>, receiver <a href="http://localhost:6060/pkg/github.com/pip-services3-go/pip-services3-messaging-go/queues/">cqueues</a>.<a href="http://localhost:6060/pkg/github.com/pip-services3-go/pip-services3-messaging-go/queues/#IMessageReceiver">IMessageReceiver</a>) <a href="http://localhost:6060/pkg/builtin/#error">error</a></pre>
 				<p>
 Listens for incoming messages and blocks the current thread until queue is closed.
 Parameters:
 </p>
 <pre>- correlationId   string  (optional) transaction id to trace execution through call chain.
-- receiver    msgqueues.IMessageReceiver      a receiver to receive incoming messages.
+- receiver    cqueues.IMessageReceiver      a receiver to receive incoming messages.
 </pre>
 <p>
 See IMessageReceiver
@@ -444,18 +485,18 @@ See receive
 				
 			
 				
-				<h3 id="MqttMessageQueue.MoveToDeadLetter">func (*MqttMessageQueue) <a href="http://localhost:6060/src/queues/MqttMessageQueue.go?s=10697:10788#L293">MoveToDeadLetter</a>
+				<h3 id="MqttMessageQueue.MoveToDeadLetter">func (*MqttMessageQueue) <a href="http://localhost:6060/src/queues/MqttMessageQueue.go?s=17761:17844#L553">MoveToDeadLetter</a>
 					<a class="permalink" href="index.html#MqttMessageQueue.MoveToDeadLetter">&#xb6;</a>
 					
 					
 				</h3>
-				<pre>func (c *<a href="index.html#MqttMessageQueue">MqttMessageQueue</a>) MoveToDeadLetter(message *<a href="http://localhost:6060/pkg/github.com/pip-services3-go/pip-services3-messaging-go/queues/">msgqueues</a>.<a href="http://localhost:6060/pkg/github.com/pip-services3-go/pip-services3-messaging-go/queues/#MessageEnvelope">MessageEnvelope</a>) (err <a href="http://localhost:6060/pkg/builtin/#error">error</a>)</pre>
+				<pre>func (c *<a href="index.html#MqttMessageQueue">MqttMessageQueue</a>) MoveToDeadLetter(message *<a href="http://localhost:6060/pkg/github.com/pip-services3-go/pip-services3-messaging-go/queues/">cqueues</a>.<a href="http://localhost:6060/pkg/github.com/pip-services3-go/pip-services3-messaging-go/queues/#MessageEnvelope">MessageEnvelope</a>) <a href="http://localhost:6060/pkg/builtin/#error">error</a></pre>
 				<p>
 Permanently removes a message from the queue and sends it to dead letter queue.
 Important: This method is not supported by MQTT.
 Parameters:
 </p>
-<pre>- message  *msgqueues.MessageEnvelope a message to be removed.
+<pre>- message  *cqueues.MessageEnvelope a message to be removed.
 </pre>
 <p>
 Returns: error
@@ -468,23 +509,52 @@ Returns: error
 				
 			
 				
-				<h3 id="MqttMessageQueue.OpenWithParams">func (*MqttMessageQueue) <a href="http://localhost:6060/src/queues/MqttMessageQueue.go?s=3314:3460#L89">OpenWithParams</a>
+				<h3 id="MqttMessageQueue.OnMessage">func (*MqttMessageQueue) <a href="http://localhost:6060/src/queues/MqttMessageQueue.go?s=10497:10551#L328">OnMessage</a>
+					<a class="permalink" href="index.html#MqttMessageQueue.OnMessage">&#xb6;</a>
+					
+					
+				</h3>
+				<pre>func (c *<a href="index.html#MqttMessageQueue">MqttMessageQueue</a>) OnMessage(msg <a href="http://localhost:6060/pkg/github.com/eclipse/paho.mqtt.golang/">mqtt</a>.<a href="http://localhost:6060/pkg/github.com/eclipse/paho.mqtt.golang/#Message">Message</a>)</pre>
+				
+				
+				
+				
+			
+				
+				<h3 id="MqttMessageQueue.Open">func (*MqttMessageQueue) <a href="http://localhost:6060/src/queues/MqttMessageQueue.go?s=6517:6582#L179">Open</a>
+					<a class="permalink" href="index.html#MqttMessageQueue.Open">&#xb6;</a>
+					
+					
+				</h3>
+				<pre>func (c *<a href="index.html#MqttMessageQueue">MqttMessageQueue</a>) Open(correlationId <a href="http://localhost:6060/pkg/builtin/#string">string</a>) (err <a href="http://localhost:6060/pkg/builtin/#error">error</a>)</pre>
+				<p>
+Opens the component.
+</p>
+<pre>- correlationId 	(optional) transaction id to trace execution through call chain.
+- Returns 			 error or nil no errors occured.
+</pre>
+
+				
+				
+				
+			
+				
+				<h3 id="MqttMessageQueue.OpenWithParams">func (*MqttMessageQueue) <a href="http://localhost:6060/src/queues/MqttMessageQueue.go?s=7661:7806#L223">OpenWithParams</a>
 					<a class="permalink" href="index.html#MqttMessageQueue.OpenWithParams">&#xb6;</a>
 					
 					
 				</h3>
-				<pre>func (c *<a href="index.html#MqttMessageQueue">MqttMessageQueue</a>) OpenWithParams(correlationId <a href="http://localhost:6060/pkg/builtin/#string">string</a>, connection *<a href="http://localhost:6060/pkg/github.com/pip-services3-go/pip-services3-components-go/connect/">ccon</a>.<a href="http://localhost:6060/pkg/github.com/pip-services3-go/pip-services3-components-go/connect/#ConnectionParams">ConnectionParams</a>, credential *<a href="http://localhost:6060/pkg/github.com/pip-services3-go/pip-services3-components-go/auth/">cauth</a>.<a href="http://localhost:6060/pkg/github.com/pip-services3-go/pip-services3-components-go/auth/#CredentialParams">CredentialParams</a>) (err <a href="http://localhost:6060/pkg/builtin/#error">error</a>)</pre>
+				<pre>func (c *<a href="index.html#MqttMessageQueue">MqttMessageQueue</a>) OpenWithParams(correlationId <a href="http://localhost:6060/pkg/builtin/#string">string</a>, connections []*<a href="http://localhost:6060/pkg/github.com/pip-services3-go/pip-services3-components-go/connect/">cconn</a>.<a href="http://localhost:6060/pkg/github.com/pip-services3-go/pip-services3-components-go/connect/#ConnectionParams">ConnectionParams</a>,
+    credential *<a href="http://localhost:6060/pkg/github.com/pip-services3-go/pip-services3-components-go/auth/">cauth</a>.<a href="http://localhost:6060/pkg/github.com/pip-services3-go/pip-services3-components-go/auth/#CredentialParams">CredentialParams</a>) <a href="http://localhost:6060/pkg/builtin/#error">error</a></pre>
 				<p>
-Opens the component with given connection and credential parameters.
-Parameters:
+OpenWithParams method are opens the component with given connection and credential parameters.
 </p>
 <pre>- correlationId     (optional) transaction id to trace execution through call chain.
-- connection        connection parameters
+- connections        connection parameters
 - credential        credential parameters
 </pre>
 <p>
-Returns 	error
-error or nil no errors occured.
+Returns error or nil no errors occured.
 </p>
 
 				
@@ -492,12 +562,12 @@ error or nil no errors occured.
 				
 			
 				
-				<h3 id="MqttMessageQueue.Peek">func (*MqttMessageQueue) <a href="http://localhost:6060/src/queues/MqttMessageQueue.go?s=6359:6459#L175">Peek</a>
+				<h3 id="MqttMessageQueue.Peek">func (*MqttMessageQueue) <a href="http://localhost:6060/src/queues/MqttMessageQueue.go?s=12304:12391#L386">Peek</a>
 					<a class="permalink" href="index.html#MqttMessageQueue.Peek">&#xb6;</a>
 					
 					
 				</h3>
-				<pre>func (c *<a href="index.html#MqttMessageQueue">MqttMessageQueue</a>) Peek(correlationId <a href="http://localhost:6060/pkg/builtin/#string">string</a>) (result *<a href="http://localhost:6060/pkg/github.com/pip-services3-go/pip-services3-messaging-go/queues/">msgqueues</a>.<a href="http://localhost:6060/pkg/github.com/pip-services3-go/pip-services3-messaging-go/queues/#MessageEnvelope">MessageEnvelope</a>, err <a href="http://localhost:6060/pkg/builtin/#error">error</a>)</pre>
+				<pre>func (c *<a href="index.html#MqttMessageQueue">MqttMessageQueue</a>) Peek(correlationId <a href="http://localhost:6060/pkg/builtin/#string">string</a>) (*<a href="http://localhost:6060/pkg/github.com/pip-services3-go/pip-services3-messaging-go/queues/">cqueues</a>.<a href="http://localhost:6060/pkg/github.com/pip-services3-go/pip-services3-messaging-go/queues/#MessageEnvelope">MessageEnvelope</a>, <a href="http://localhost:6060/pkg/builtin/#error">error</a>)</pre>
 				<p>
 Peek method are peeks a single incoming message from the queue without removing it.
 If there are no messages available in the queue it returns nil.
@@ -506,7 +576,7 @@ Parameters:
 <pre>- correlationId  string  (optional) transaction id to trace execution through call chain.
 </pre>
 <p>
-Returns: result *msgqueues.MessageEnvelope, err error
+Returns: result *cqueues.MessageEnvelope, err error
 message or error.
 </p>
 
@@ -515,12 +585,12 @@ message or error.
 				
 			
 				
-				<h3 id="MqttMessageQueue.PeekBatch">func (*MqttMessageQueue) <a href="http://localhost:6060/src/queues/MqttMessageQueue.go?s=7120:7246#L193">PeekBatch</a>
+				<h3 id="MqttMessageQueue.PeekBatch">func (*MqttMessageQueue) <a href="http://localhost:6060/src/queues/MqttMessageQueue.go?s=13228:13342#L415">PeekBatch</a>
 					<a class="permalink" href="index.html#MqttMessageQueue.PeekBatch">&#xb6;</a>
 					
 					
 				</h3>
-				<pre>func (c *<a href="index.html#MqttMessageQueue">MqttMessageQueue</a>) PeekBatch(correlationId <a href="http://localhost:6060/pkg/builtin/#string">string</a>, messageCount <a href="http://localhost:6060/pkg/builtin/#int64">int64</a>) (result []<a href="http://localhost:6060/pkg/github.com/pip-services3-go/pip-services3-messaging-go/queues/">msgqueues</a>.<a href="http://localhost:6060/pkg/github.com/pip-services3-go/pip-services3-messaging-go/queues/#MessageEnvelope">MessageEnvelope</a>, err <a href="http://localhost:6060/pkg/builtin/#error">error</a>)</pre>
+				<pre>func (c *<a href="index.html#MqttMessageQueue">MqttMessageQueue</a>) PeekBatch(correlationId <a href="http://localhost:6060/pkg/builtin/#string">string</a>, messageCount <a href="http://localhost:6060/pkg/builtin/#int64">int64</a>) ([]*<a href="http://localhost:6060/pkg/github.com/pip-services3-go/pip-services3-messaging-go/queues/">cqueues</a>.<a href="http://localhost:6060/pkg/github.com/pip-services3-go/pip-services3-messaging-go/queues/#MessageEnvelope">MessageEnvelope</a>, <a href="http://localhost:6060/pkg/builtin/#error">error</a>)</pre>
 				<p>
 PeekBatch method are peeks multiple incoming messages from the queue without removing them.
 If there are no messages available in the queue it returns an empty list.
@@ -539,16 +609,15 @@ Returns:          callback function that receives a list with messages or error.
 				
 			
 				
-				<h3 id="MqttMessageQueue.ReadMessageCount">func (*MqttMessageQueue) <a href="http://localhost:6060/src/queues/MqttMessageQueue.go?s=5188:5258#L148">ReadMessageCount</a>
+				<h3 id="MqttMessageQueue.ReadMessageCount">func (*MqttMessageQueue) <a href="http://localhost:6060/src/queues/MqttMessageQueue.go?s=11805:11865#L372">ReadMessageCount</a>
 					<a class="permalink" href="index.html#MqttMessageQueue.ReadMessageCount">&#xb6;</a>
 					
 					
 				</h3>
-				<pre>func (c *<a href="index.html#MqttMessageQueue">MqttMessageQueue</a>) ReadMessageCount() (count <a href="http://localhost:6060/pkg/builtin/#int64">int64</a>, err <a href="http://localhost:6060/pkg/builtin/#error">error</a>)</pre>
+				<pre>func (c *<a href="index.html#MqttMessageQueue">MqttMessageQueue</a>) ReadMessageCount() (<a href="http://localhost:6060/pkg/builtin/#int64">int64</a>, <a href="http://localhost:6060/pkg/builtin/#error">error</a>)</pre>
 				<p>
 ReadMessageCount method are reads the current number of messages in the queue to be delivered.
-Returns count int64, err error
-number of messages or error.
+Returns number of messages or error.
 </p>
 
 				
@@ -556,12 +625,12 @@ number of messages or error.
 				
 			
 				
-				<h3 id="MqttMessageQueue.Receive">func (*MqttMessageQueue) <a href="http://localhost:6060/src/queues/MqttMessageQueue.go?s=7698:7828#L205">Receive</a>
+				<h3 id="MqttMessageQueue.Receive">func (*MqttMessageQueue) <a href="http://localhost:6060/src/queues/MqttMessageQueue.go?s=14194:14311#L444">Receive</a>
 					<a class="permalink" href="index.html#MqttMessageQueue.Receive">&#xb6;</a>
 					
 					
 				</h3>
-				<pre>func (c *<a href="index.html#MqttMessageQueue">MqttMessageQueue</a>) Receive(correlationId <a href="http://localhost:6060/pkg/builtin/#string">string</a>, waitTimeout <a href="http://localhost:6060/pkg/time/">time</a>.<a href="http://localhost:6060/pkg/time/#Duration">Duration</a>) (result *<a href="http://localhost:6060/pkg/github.com/pip-services3-go/pip-services3-messaging-go/queues/">msgqueues</a>.<a href="http://localhost:6060/pkg/github.com/pip-services3-go/pip-services3-messaging-go/queues/#MessageEnvelope">MessageEnvelope</a>, err <a href="http://localhost:6060/pkg/builtin/#error">error</a>)</pre>
+				<pre>func (c *<a href="index.html#MqttMessageQueue">MqttMessageQueue</a>) Receive(correlationId <a href="http://localhost:6060/pkg/builtin/#string">string</a>, waitTimeout <a href="http://localhost:6060/pkg/time/">time</a>.<a href="http://localhost:6060/pkg/time/#Duration">Duration</a>) (*<a href="http://localhost:6060/pkg/github.com/pip-services3-go/pip-services3-messaging-go/queues/">cqueues</a>.<a href="http://localhost:6060/pkg/github.com/pip-services3-go/pip-services3-messaging-go/queues/#MessageEnvelope">MessageEnvelope</a>, <a href="http://localhost:6060/pkg/builtin/#error">error</a>)</pre>
 				<p>
 Receive method are receives an incoming message and removes it from the queue.
 Parameters:
@@ -570,7 +639,7 @@ Parameters:
 - waitTimeout  time.Duration     a timeout in milliseconds to wait for a message to come.
 </pre>
 <p>
-Returns:  result *msgqueues.MessageEnvelope, err error
+Returns:  result *cqueues.MessageEnvelope, err error
 receives a message or error.
 </p>
 
@@ -579,19 +648,19 @@ receives a message or error.
 				
 			
 				
-				<h3 id="MqttMessageQueue.RenewLock">func (*MqttMessageQueue) <a href="http://localhost:6060/src/queues/MqttMessageQueue.go?s=9194:9305#L256">RenewLock</a>
+				<h3 id="MqttMessageQueue.RenewLock">func (*MqttMessageQueue) <a href="http://localhost:6060/src/queues/MqttMessageQueue.go?s=16282:16391#L516">RenewLock</a>
 					<a class="permalink" href="index.html#MqttMessageQueue.RenewLock">&#xb6;</a>
 					
 					
 				</h3>
-				<pre>func (c *<a href="index.html#MqttMessageQueue">MqttMessageQueue</a>) RenewLock(message *<a href="http://localhost:6060/pkg/github.com/pip-services3-go/pip-services3-messaging-go/queues/">msgqueues</a>.<a href="http://localhost:6060/pkg/github.com/pip-services3-go/pip-services3-messaging-go/queues/#MessageEnvelope">MessageEnvelope</a>, lockTimeout <a href="http://localhost:6060/pkg/time/">time</a>.<a href="http://localhost:6060/pkg/time/#Duration">Duration</a>) (err <a href="http://localhost:6060/pkg/builtin/#error">error</a>)</pre>
+				<pre>func (c *<a href="index.html#MqttMessageQueue">MqttMessageQueue</a>) RenewLock(message *<a href="http://localhost:6060/pkg/github.com/pip-services3-go/pip-services3-messaging-go/queues/">cqueues</a>.<a href="http://localhost:6060/pkg/github.com/pip-services3-go/pip-services3-messaging-go/queues/#MessageEnvelope">MessageEnvelope</a>, lockTimeout <a href="http://localhost:6060/pkg/time/">time</a>.<a href="http://localhost:6060/pkg/time/#Duration">Duration</a>) (err <a href="http://localhost:6060/pkg/builtin/#error">error</a>)</pre>
 				<p>
 RenewLock method are renews a lock on a message that makes it invisible from other receivers in the queue.
 This method is usually used to extend the message processing time.
 Important: This method is not supported by MQTT.
 Parameters:
 </p>
-<pre>- message   *msgqueues.MessageEnvelope    a message to extend its lock.
+<pre>- message   *cqueues.MessageEnvelope    a message to extend its lock.
 - lockTimeout  time.Duration  a locking timeout in milliseconds.
 </pre>
 <p>
@@ -604,22 +673,21 @@ receives an error or nil for success.
 				
 			
 				
-				<h3 id="MqttMessageQueue.Send">func (*MqttMessageQueue) <a href="http://localhost:6060/src/queues/MqttMessageQueue.go?s=5643:5744#L161">Send</a>
+				<h3 id="MqttMessageQueue.Send">func (*MqttMessageQueue) <a href="http://localhost:6060/src/queues/MqttMessageQueue.go?s=15184:15277#L480">Send</a>
 					<a class="permalink" href="index.html#MqttMessageQueue.Send">&#xb6;</a>
 					
 					
 				</h3>
-				<pre>func (c *<a href="index.html#MqttMessageQueue">MqttMessageQueue</a>) Send(correlationId <a href="http://localhost:6060/pkg/builtin/#string">string</a>, envelop *<a href="http://localhost:6060/pkg/github.com/pip-services3-go/pip-services3-messaging-go/queues/">msgqueues</a>.<a href="http://localhost:6060/pkg/github.com/pip-services3-go/pip-services3-messaging-go/queues/#MessageEnvelope">MessageEnvelope</a>) (err <a href="http://localhost:6060/pkg/builtin/#error">error</a>)</pre>
+				<pre>func (c *<a href="index.html#MqttMessageQueue">MqttMessageQueue</a>) Send(correlationId <a href="http://localhost:6060/pkg/builtin/#string">string</a>, envelop *<a href="http://localhost:6060/pkg/github.com/pip-services3-go/pip-services3-messaging-go/queues/">cqueues</a>.<a href="http://localhost:6060/pkg/github.com/pip-services3-go/pip-services3-messaging-go/queues/#MessageEnvelope">MessageEnvelope</a>) <a href="http://localhost:6060/pkg/builtin/#error">error</a></pre>
 				<p>
 Send method are sends a message into the queue.
 Parameters:
 </p>
 <pre>- correlationId string    (optional) transaction id to trace execution through call chain.
-- envelope *msgqueues.MessageEnvelope  a message envelop to be sent.
+- envelope *cqueues.MessageEnvelope  a message envelop to be sent.
 </pre>
 <p>
-Returns: error
-error or nil for success.
+Returns: error or nil for success.
 </p>
 
 				
@@ -627,14 +695,31 @@ error or nil for success.
 				
 			
 				
-				<h3 id="MqttMessageQueue.Subscribe">func (*MqttMessageQueue) <a href="http://localhost:6060/src/queues/MqttMessageQueue.go?s=11128:11166#L306">Subscribe</a>
-					<a class="permalink" href="index.html#MqttMessageQueue.Subscribe">&#xb6;</a>
+				<h3 id="MqttMessageQueue.SetReferences">func (*MqttMessageQueue) <a href="http://localhost:6060/src/queues/MqttMessageQueue.go?s=5276:5345#L135">SetReferences</a>
+					<a class="permalink" href="index.html#MqttMessageQueue.SetReferences">&#xb6;</a>
 					
 					
 				</h3>
-				<pre>func (c *<a href="index.html#MqttMessageQueue">MqttMessageQueue</a>) Subscribe()</pre>
+				<pre>func (c *<a href="index.html#MqttMessageQueue">MqttMessageQueue</a>) SetReferences(references <a href="http://localhost:6060/pkg/github.com/pip-services3-go/pip-services3-commons-go/refer/">cref</a>.<a href="http://localhost:6060/pkg/github.com/pip-services3-go/pip-services3-commons-go/refer/#IReferences">IReferences</a>)</pre>
 				<p>
-Subscribe method are subscribes to the topic.
+Sets references to dependent components.
+</p>
+<pre>- references 	references to locate the component dependencies.
+</pre>
+
+				
+				
+				
+			
+				
+				<h3 id="MqttMessageQueue.UnsetReferences">func (*MqttMessageQueue) <a href="http://localhost:6060/src/queues/MqttMessageQueue.go?s=5849:5893#L155">UnsetReferences</a>
+					<a class="permalink" href="index.html#MqttMessageQueue.UnsetReferences">&#xb6;</a>
+					
+					
+				</h3>
+				<pre>func (c *<a href="index.html#MqttMessageQueue">MqttMessageQueue</a>) UnsetReferences()</pre>
+				<p>
+Unsets (clears) previously set references to dependent components.
 </p>
 
 				

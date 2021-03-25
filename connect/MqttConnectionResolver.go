@@ -1,7 +1,8 @@
 package connect
 
 import (
-	"sync"
+	"strconv"
+	"strings"
 
 	cconf "github.com/pip-services3-go/pip-services3-commons-go/config"
 	cerr "github.com/pip-services3-go/pip-services3-commons-go/errors"
@@ -11,7 +12,7 @@ import (
 )
 
 /*
-MqttConnectionResolver helper class that resolves MQTT connection and credential parameters,
+MqttConnectionResolver helper class that resolves Mqtt connection and credential parameters,
 validates them and generates connection options.
 
   Configuration parameters:
@@ -32,9 +33,7 @@ validates them and generates connection options.
 - *:credential-store:*:*:1.0   (optional) Credential stores to resolve credentials
 */
 type MqttConnectionResolver struct {
-	// The connections resolver.
 	ConnectionResolver *ccon.ConnectionResolver
-	//The credentials resolver.
 	CredentialResolver *cauth.CredentialResolver
 }
 
@@ -47,7 +46,7 @@ func NewMqttConnectionResolver() *MqttConnectionResolver {
 
 // Configure are configures component by passing configuration parameters.
 // Parameters:
-//   - config   *cconf.ConfigParams
+//  - config   *cconf.ConfigParams
 // configuration parameters to be set.
 func (c *MqttConnectionResolver) Configure(config *cconf.ConfigParams) {
 	c.ConnectionResolver.Configure(config)
@@ -56,7 +55,7 @@ func (c *MqttConnectionResolver) Configure(config *cconf.ConfigParams) {
 
 // SetReferences are sets references to dependent components.
 // Parameters:
-//   - references  cref.IReferences
+//  - references  cref.IReferences
 //	references to locate the component dependencies.
 func (c *MqttConnectionResolver) SetReferences(references cref.IReferences) {
 	c.ConnectionResolver.SetReferences(references)
@@ -65,7 +64,7 @@ func (c *MqttConnectionResolver) SetReferences(references cref.IReferences) {
 
 func (c *MqttConnectionResolver) validateConnection(correlationId string, connection *ccon.ConnectionParams) error {
 	if connection == nil {
-		return cerr.NewConfigError(correlationId, "NO_CONNECTION", "MQTT connection is not set")
+		return cerr.NewConfigError(correlationId, "NO_CONNECTION", "Mqtt connection is not set")
 	}
 
 	uri := connection.Uri()
@@ -73,7 +72,7 @@ func (c *MqttConnectionResolver) validateConnection(correlationId string, connec
 		return nil
 	}
 
-	protocol := connection.GetAsString("protocol")
+	protocol := connection.ProtocolWithDefault("tcp")
 	if protocol == "" {
 		return cerr.NewConfigError(correlationId, "NO_PROTOCOL", "Connection protocol is not set")
 	}
@@ -83,7 +82,7 @@ func (c *MqttConnectionResolver) validateConnection(correlationId string, connec
 		return cerr.NewConfigError(correlationId, "NO_HOST", "Connection host is not set")
 	}
 
-	port := connection.Port()
+	port := connection.PortWithDefault(1883)
 	if port == 0 {
 		return cerr.NewConfigError(correlationId, "NO_PORT", "Connection port is not set")
 	}
@@ -91,22 +90,57 @@ func (c *MqttConnectionResolver) validateConnection(correlationId string, connec
 	return nil
 }
 
-func (c *MqttConnectionResolver) composeOptions(connection *ccon.ConnectionParams, credential *cauth.CredentialParams) *cconf.ConfigParams {
+func (c *MqttConnectionResolver) composeOptions(connections []*ccon.ConnectionParams,
+	credential *cauth.CredentialParams) *cconf.ConfigParams {
 
 	// Define additional parameters parameters
 	if credential == nil {
 		credential = cauth.NewEmptyCredentialParams()
 	}
-	options := connection.Override(&credential.ConfigParams)
 
-	// Compose uri
-	if options.Get("uri") == "" {
-		options.SetAsObject("uri", options.Get("protocol")+"://"+options.Get("host"))
+	// Contruct options and copy over credentials
+	options := cconf.NewEmptyConfigParams().SetDefaults(&credential.ConfigParams)
 
-		if options.Get("port") != "" {
-			options.SetAsObject("uri", options.Get("uri")+":"+options.Get("port"))
+	globalUri := ""
+	uriBuilder := strings.Builder{}
+
+	// Process connections, find or constract uri
+	for _, connection := range connections {
+		options = options.SetDefaults(&connection.ConfigParams)
+
+		if globalUri != "" {
+			continue
 		}
+
+		uri := connection.Uri()
+		if uri != "" {
+			globalUri = uri
+			continue
+		}
+
+		if uriBuilder.Len() > 0 {
+			uriBuilder.WriteString(",")
+		}
+
+		protocol := connection.ProtocolWithDefault("mqtt")
+		uriBuilder.WriteString(protocol)
+
+		host := connection.Host()
+		uriBuilder.WriteString("://")
+		uriBuilder.WriteString(host)
+
+		port := connection.PortWithDefault(1883)
+		uriBuilder.WriteString(":")
+		uriBuilder.WriteString(strconv.Itoa(port))
 	}
+
+	// Set connection uri
+	if globalUri != "" {
+		options.SetAsObject("uri", globalUri)
+	} else {
+		options.SetAsObject("uri", uriBuilder.String())
+	}
+
 	return options
 }
 
@@ -114,54 +148,49 @@ func (c *MqttConnectionResolver) composeOptions(connection *ccon.ConnectionParam
 // Parameters:
 //   - correlationId   string
 //   (optional) transaction id to trace execution through call chain.
-// Retruns options *cconf.ConfigParams, err error
+// Returns options *cconf.ConfigParams, err error
 // receives resolved options or error.
-func (c *MqttConnectionResolver) Resolve(correlationId string) (options *cconf.ConfigParams, err error) {
-	var connection *ccon.ConnectionParams
-	var credential *cauth.CredentialParams
-	var errCred, errConn error
-	var wg sync.WaitGroup
+func (c *MqttConnectionResolver) Resolve(correlationId string) (*cconf.ConfigParams, error) {
+	connections, err := c.ConnectionResolver.ResolveAll(correlationId)
+	if err != nil {
+		return nil, err
+	}
 
-	wg.Add(2)
-	go func() {
-		defer wg.Done()
-		connection, errConn = c.ConnectionResolver.Resolve(correlationId)
-		//Validate connections
-		if errConn == nil {
-			errConn = c.validateConnection(correlationId, connection)
+	credential, err := c.CredentialResolver.Lookup(correlationId)
+	if err != nil {
+		return nil, err
+	}
+
+	// Validate connections
+	for _, connection := range connections {
+		err = c.validateConnection(correlationId, connection)
+		if err != nil {
+			return nil, err
 		}
-	}()
-	go func() {
-		defer wg.Done()
-		credential, errCred = c.CredentialResolver.Lookup(correlationId)
-		// Credentials are not validated right now
-	}()
-	wg.Wait()
+	}
 
-	if errConn != nil {
-		return nil, errConn
-	}
-	if errCred != nil {
-		return nil, errCred
-	}
-	options = c.composeOptions(connection, credential)
+	options := c.composeOptions(connections, credential)
 	return options, nil
 }
 
-// Compose method are composes MQTT connection options from connection and credential parameters.
+// Compose method are composes Mqtt connection options from connection and credential parameters.
 // Parameters:
 //   - correlationId  string  (optional) transaction id to trace execution through call chain.
 //   - connection  *ccon.ConnectionParams    connection parameters
 //   - credential  *cauth.CredentialParams   credential parameters
 // Returns: options *cconf.ConfigParams, err error
 // resolved options or error.
-func (c *MqttConnectionResolver) Compose(correlationId string, connection *ccon.ConnectionParams, credential *cauth.CredentialParams) (options *cconf.ConfigParams, err error) {
+func (c *MqttConnectionResolver) Compose(correlationId string, connections []*ccon.ConnectionParams,
+	credential *cauth.CredentialParams) (*cconf.ConfigParams, error) {
+
 	// Validate connections
-	err = c.validateConnection(correlationId, connection)
-	if err != nil {
-		return nil, err
-	} else {
-		options := c.composeOptions(connection, credential)
-		return options, nil
+	for _, connection := range connections {
+		err := c.validateConnection(correlationId, connection)
+		if err != nil {
+			return nil, err
+		}
 	}
+
+	options := c.composeOptions(connections, credential)
+	return options, nil
 }

@@ -3,25 +3,38 @@ package build
 import (
 	cref "github.com/pip-services3-go/pip-services3-commons-go/refer"
 	cbuild "github.com/pip-services3-go/pip-services3-components-go/build"
-	mqueue "github.com/pip-services3-go/pip-services3-mqtt-go/queues"
+	connect "github.com/pip-services3-go/pip-services3-mqtt-go/connect"
+	queues "github.com/pip-services3-go/pip-services3-mqtt-go/queues"
 )
 
-// DefaultMqttFactory are creates MqttMessageQueue components by their descriptors.
+// Creates MqttMessageQueue components by their descriptors.
 // See MqttMessageQueue
 type DefaultMqttFactory struct {
-	cbuild.Factory
-	Descriptor          *cref.Descriptor
-	MqttQueueDescriptor *cref.Descriptor
+	*cbuild.Factory
 }
 
-// NewDefaultMqttFactory are create a new instance of the factory.
+// NewDefaultMqttFactory method are create a new instance of the factory.
 func NewDefaultMqttFactory() *DefaultMqttFactory {
 	c := DefaultMqttFactory{}
-	c.Factory = *cbuild.NewFactory()
-	c.Descriptor = cref.NewDescriptor("pip-services", "factory", "mqtt", "default", "1.0")
-	c.MqttQueueDescriptor = cref.NewDescriptor("pip-services", "message-queue", "mqtt", "*", "1.0")
-	c.Register(c.MqttQueueDescriptor, func(locator interface{}) interface{} {
-		return mqueue.NewMqttMessageQueue(c.MqttQueueDescriptor.Name())
+	c.Factory = cbuild.NewFactory()
+
+	mqttQueueFactoryDescriptor := cref.NewDescriptor("pip-services", "queue-factory", "mqtt", "*", "1.0")
+	mqttConnectionDescriptor := cref.NewDescriptor("pip-services", "connection", "mqtt", "*", "1.0")
+	mqttQueueDescriptor := cref.NewDescriptor("pip-services", "message-queue", "mqtt", "*", "1.0")
+
+	c.RegisterType(mqttQueueFactoryDescriptor, NewMqttMessageQueueFactory)
+
+	c.RegisterType(mqttConnectionDescriptor, connect.NewMqttConnection)
+
+	c.Register(mqttQueueDescriptor, func(locator interface{}) interface{} {
+		name := ""
+		descriptor, ok := locator.(*cref.Descriptor)
+		if ok {
+			name = descriptor.Name()
+		}
+
+		return queues.NewMqttMessageQueue(name)
 	})
+
 	return &c
 }

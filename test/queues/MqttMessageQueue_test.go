@@ -3,103 +3,107 @@ package test_queues
 import (
 	"os"
 	"testing"
-	"time"
 
 	cconf "github.com/pip-services3-go/pip-services3-commons-go/config"
-	msgqueues "github.com/pip-services3-go/pip-services3-messaging-go/queues"
-	mqueue "github.com/pip-services3-go/pip-services3-mqtt-go/queues"
-	"github.com/stretchr/testify/assert"
+	queues "github.com/pip-services3-go/pip-services3-mqtt-go/queues"
 )
 
-var queue *mqueue.MqttMessageQueue
+type mqttMessageQueueTest struct {
+	queue   *queues.MqttMessageQueue
+	fixture *MessageQueueFixture
+}
 
-func TestMqttMessageQueue(t *testing.T) {
+func newMqttMessageQueueTest() *mqttMessageQueueTest {
+	mqttUri := os.Getenv("MQTT_SERVICE_URI")
+	mqttHost := os.Getenv("MQTT_SERVICE_HOST")
+	if mqttHost == "" {
+		mqttHost = "localhost"
+	}
 
-	brokerHost := os.Getenv("MQTT_SERVICE_HOST")
-	if brokerHost == "" {
-		brokerHost = "localhost"
+	mqttPort := os.Getenv("MQTT_SERVICE_PORT")
+	if mqttPort == "" {
+		mqttPort = "1883"
 	}
-	brokerPort := os.Getenv("MQTT_SERVICE_PORT")
-	if brokerPort == "" {
-		brokerPort = "1883"
+
+	mqttTopic := os.Getenv("MQTT_TOPIC")
+	if mqttTopic == "" {
+		mqttTopic = "test"
 	}
-	brokerTopic := os.Getenv("MQTT_TOPIC")
-	if brokerTopic == "" {
-		brokerTopic = "/test"
+
+	mqttUser := os.Getenv("MQTT_USER")
+	if mqttUser == "" {
+		mqttUser = "mqtt"
 	}
-	if brokerHost == "" && brokerPort == "" {
+	mqttPassword := os.Getenv("MQTT_PASS")
+	if mqttPassword == "" {
+		mqttPassword = "mqtt"
+	}
+
+	if mqttUri == "" && mqttHost == "" {
+		return nil
+	}
+
+	queue := queues.NewMqttMessageQueue(mqttTopic)
+	queue.Configure(cconf.NewConfigParamsFromTuples(
+		"connection.uri", mqttUri,
+		"connection.host", mqttHost,
+		"connection.port", mqttPort,
+		"credential.username", mqttUser,
+		"credential.password", mqttPassword,
+	))
+
+	fixture := NewMessageQueueFixture(queue)
+
+	return &mqttMessageQueueTest{
+		queue:   queue,
+		fixture: fixture,
+	}
+}
+
+func (c *mqttMessageQueueTest) setup(t *testing.T) {
+	err := c.queue.Open("")
+	if err != nil {
+		t.Error("Failed to open queue", err)
 		return
 	}
 
-	queueConfig := cconf.NewConfigParamsFromTuples(
-		"connection.protocol", "tcp",
-		"connection.host", brokerHost,
-		"connection.port", brokerPort,
-		"connection.topic", brokerTopic,
-		//"credential.username", "user",
-		//"credential.password", "pa$$wd",
-	)
-
-	queue = mqueue.NewMqttMessageQueue("testQueue")
-	queue.Configure(queueConfig)
-
-	qOpnErr := queue.Open("")
-	if qOpnErr == nil {
-		queue.Clear("")
-	}
-
-	defer queue.Close("")
-
-	t.Run("Receive and Send Message", ReceiveAndSendMessage)
-	queue.Clear("")
-	t.Run("On Message", OnMessage)
-
-}
-func ReceiveAndSendMessage(t *testing.T) {
-	var envelop1 *msgqueues.MessageEnvelope = msgqueues.NewMessageEnvelope("123", "Test", []byte("Test message"))
-	var envelop2 *msgqueues.MessageEnvelope
-
-	time.AfterFunc(500*time.Millisecond, func() {
-		queue.Send("", envelop1)
-	})
-
-	result, err := queue.Receive("", 10000*time.Millisecond)
-	assert.Nil(t, err)
-	envelop2 = result
-
-	assert.NotNil(t, envelop2)
-	assert.NotNil(t, envelop1.Message)
-	assert.NotNil(t, envelop2.Message)
-	assert.Equal(t, envelop1.Message, envelop2.Message)
+	// err = c.queue.Clear("")
+	// if err != nil {
+	// 	t.Error("Failed to clear queue", err)
+	// 	return
+	// }
 }
 
-func OnMessage(t *testing.T) {
-	var envelop1 *msgqueues.MessageEnvelope = msgqueues.NewMessageEnvelope("123", "Test", []byte("Test message"))
-	var envelop2 *msgqueues.MessageEnvelope
+func (c *mqttMessageQueueTest) teardown(t *testing.T) {
+	err := c.queue.Close("")
+	if err != nil {
+		t.Error("Failed to close queue", err)
+	}
+}
 
-	var reciver TestMsgReciver = TestMsgReciver{}
-
-	queue.BeginListen("", &reciver)
-
-	select {
-	case <-time.After(1000 * time.Millisecond):
+func TestMqttMessageQueue(t *testing.T) {
+	c := newMqttMessageQueueTest()
+	if c == nil {
+		return
 	}
 
-	sndErr := queue.Send("", envelop1)
-	assert.Nil(t, sndErr)
+	c.setup(t)
+	t.Run("Send Receive Message", c.fixture.TestSendReceiveMessage)
+	c.teardown(t)
 
-	select {
-	case <-time.After(1000 * time.Millisecond):
-	}
+	c.setup(t)
+	t.Run("Receive Send Message", c.fixture.TestReceiveSendMessage)
+	c.teardown(t)
 
-	envelop2 = reciver.envelope
+	c.setup(t)
+	t.Run("Send Peek Message", c.fixture.TestSendPeekMessage)
+	c.teardown(t)
 
-	assert.NotNil(t, envelop2)
+	c.setup(t)
+	t.Run("Peek No Message", c.fixture.TestPeekNoMessage)
+	c.teardown(t)
 
-	assert.NotNil(t, envelop1.Message)
-	assert.NotNil(t, envelop2.Message)
-	assert.Equal(t, envelop1.Message, envelop2.Message)
-
-	queue.EndListen("")
-
+	c.setup(t)
+	t.Run("On Message", c.fixture.TestOnMessage)
+	c.teardown(t)
 }

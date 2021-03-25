@@ -120,6 +120,14 @@
 				
 				
 			
+				
+				<dd><a href="index.html#MqttMessageQueueFactory">type MqttMessageQueueFactory</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#NewMqttMessageQueueFactory">func NewMqttMessageQueueFactory() *MqttMessageQueueFactory</a></dd>
+				
+				
+			
 			
 			</dl>
 			</div><!-- #manual-nav -->
@@ -132,6 +140,8 @@
 			<span style="font-size:90%">
 			
 				<a href="http://localhost:6060/src/build/DefaultMqttFactory.go">DefaultMqttFactory.go</a>
+			
+				<a href="http://localhost:6060/src/build/MqttMessageQueueFactory.go">MqttMessageQueueFactory.go</a>
 			
 			</span>
 			</p>
@@ -147,20 +157,18 @@
 		
 			
 			
-			<h2 id="DefaultMqttFactory">type <a href="http://localhost:6060/src/build/DefaultMqttFactory.go?s=341:467#L1">DefaultMqttFactory</a>
+			<h2 id="DefaultMqttFactory">type <a href="http://localhost:6060/src/build/DefaultMqttFactory.go?s=387:438#L2">DefaultMqttFactory</a>
 				<a class="permalink" href="index.html#DefaultMqttFactory">&#xb6;</a>
 				
 				
 			</h2>
 			<p>
-DefaultMqttFactory are creates MqttMessageQueue components by their descriptors.
+Creates MqttMessageQueue components by their descriptors.
 See MqttMessageQueue
 </p>
 
 			<pre>type DefaultMqttFactory struct {
-    <a href="http://localhost:6060/pkg/github.com/pip-services3-go/pip-services3-components-go/build/">cbuild</a>.<a href="http://localhost:6060/pkg/github.com/pip-services3-go/pip-services3-components-go/build/#Factory">Factory</a>
-<span id="DefaultMqttFactory.Descriptor"></span>    Descriptor          *<a href="http://localhost:6060/pkg/github.com/pip-services3-go/pip-services3-commons-go/refer/">cref</a>.<a href="http://localhost:6060/pkg/github.com/pip-services3-go/pip-services3-commons-go/refer/#Descriptor">Descriptor</a>
-<span id="DefaultMqttFactory.MqttQueueDescriptor"></span>    MqttQueueDescriptor *<a href="http://localhost:6060/pkg/github.com/pip-services3-go/pip-services3-commons-go/refer/">cref</a>.<a href="http://localhost:6060/pkg/github.com/pip-services3-go/pip-services3-commons-go/refer/#Descriptor">Descriptor</a>
+    *<a href="http://localhost:6060/pkg/github.com/pip-services3-go/pip-services3-components-go/build/">cbuild</a>.<a href="http://localhost:6060/pkg/github.com/pip-services3-go/pip-services3-components-go/build/#Factory">Factory</a>
 }
 </pre>
 
@@ -174,14 +182,62 @@ See MqttMessageQueue
 
 			
 				
-				<h3 id="NewDefaultMqttFactory">func <a href="http://localhost:6060/src/build/DefaultMqttFactory.go?s=536:584#L8">NewDefaultMqttFactory</a>
+				<h3 id="NewDefaultMqttFactory">func <a href="http://localhost:6060/src/build/DefaultMqttFactory.go?s=514:562#L7">NewDefaultMqttFactory</a>
 					<a class="permalink" href="index.html#NewDefaultMqttFactory">&#xb6;</a>
 					
 					
 				</h3>
 				<pre>func NewDefaultMqttFactory() *<a href="index.html#DefaultMqttFactory">DefaultMqttFactory</a></pre>
 				<p>
-NewDefaultMqttFactory are create a new instance of the factory.
+NewDefaultMqttFactory method are create a new instance of the factory.
+</p>
+
+				
+				
+			
+
+			
+		
+			
+			
+			<h2 id="MqttMessageQueueFactory">type <a href="http://localhost:6060/src/build/MqttMessageQueueFactory.go?s=482:597#L5">MqttMessageQueueFactory</a>
+				<a class="permalink" href="index.html#MqttMessageQueueFactory">&#xb6;</a>
+				
+				
+			</h2>
+			<p>
+MqttMessageQueueFactory are creates MqttMessageQueue components by their descriptors.
+Name of created message queue is taken from its descriptor.
+</p>
+<p>
+See Factory
+See MqttMessageQueue
+</p>
+
+			<pre>type MqttMessageQueueFactory struct {
+    <a href="http://localhost:6060/pkg/github.com/pip-services3-go/pip-services3-components-go/build/">build</a>.<a href="http://localhost:6060/pkg/github.com/pip-services3-go/pip-services3-components-go/build/#Factory">Factory</a>
+    <span class="comment">// contains filtered or unexported fields</span>
+}
+</pre>
+
+			
+
+			
+
+			
+			
+			
+
+			
+				
+				<h3 id="NewMqttMessageQueueFactory">func <a href="http://localhost:6060/src/build/MqttMessageQueueFactory.go?s=678:736#L12">NewMqttMessageQueueFactory</a>
+					<a class="permalink" href="index.html#NewMqttMessageQueueFactory">&#xb6;</a>
+					
+					
+				</h3>
+				<pre>func NewMqttMessageQueueFactory() *<a href="index.html#MqttMessageQueueFactory">MqttMessageQueueFactory</a></pre>
+				<p>
+NewMqttMessageQueueFactory method are create a new instance of the factory.
 </p>
 
 				
