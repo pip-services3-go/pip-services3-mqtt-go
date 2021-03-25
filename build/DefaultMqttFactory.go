@@ -20,7 +20,7 @@ func NewDefaultMqttFactory() *DefaultMqttFactory {
 	c.Factory = *cbuild.NewFactory()
 	c.Descriptor = cref.NewDescriptor("pip-services", "factory", "mqtt", "default", "1.0")
 	c.MqttQueueDescriptor = cref.NewDescriptor("pip-services", "message-queue", "mqtt", "*", "1.0")
-	c.Register(c.MqttQueueDescriptor, func() interface{} {
+	c.Register(c.MqttQueueDescriptor, func(locator interface{}) interface{} {
 		return mqueue.NewMqttMessageQueue(c.MqttQueueDescriptor.Name())
 	})
 	return &c

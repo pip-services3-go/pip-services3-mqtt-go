@@ -9,8 +9,8 @@ services:
     depends_on:
       - mosquitto
     environment:
-      - MOSQUITTO_PORT=1883
-      - MOSQUITTO_HOST=mosquitto
+      - MQTT_SERVICE_PORT=1883
+      - MQTT_SERVICE_HOST=mosquitto
 
   mosquitto:
     image: toke/mosquitto

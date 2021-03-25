@@ -7,7 +7,7 @@ import (
 
 	cauth "github.com/pip-services3-go/pip-services3-components-go/auth"
 	ccon "github.com/pip-services3-go/pip-services3-components-go/connect"
-	msgqueues "github.com/pip-services3-go/pip-services3-messaging-go/queues"
+	cqueues "github.com/pip-services3-go/pip-services3-messaging-go/queues"
 	mcon "github.com/pip-services3-go/pip-services3-mqtt-go/connect"
 
 	mqtt "github.com/eclipse/paho.mqtt.golang"
@@ -62,22 +62,23 @@ Example:
         }
 */
 type MqttMessageQueue struct {
-	*msgqueues.MessageQueue
+	*cqueues.MessageQueue
 	client          mqtt.Client
 	topic           string
 	subscribed      bool
 	optionsResolver *mcon.MqttConnectionResolver
-	receiver        msgqueues.IMessageReceiver
-	messages        []msgqueues.MessageEnvelope
+	receiver        cqueues.IMessageReceiver
+	messages        []cqueues.MessageEnvelope
 }
 
 // NewMqttMessageQueue are creates a new instance of the message queue.
 //   - name  string (optional) a queue name.
 func NewMqttMessageQueue(name string) *MqttMessageQueue {
 	c := MqttMessageQueue{}
-	c.MessageQueue = msgqueues.NewMessageQueue(name)
-	c.MessageQueue.IMessageQueue = &c
-	c.Capabilities = msgqueues.NewMessagingCapabilities(false, true, true, true, true, false, false, false, true)
+	c.MessageQueue = cqueues.InheritMessageQueue(
+		&c, name,
+		cqueues.NewMessagingCapabilities(false, true, true, true, true, false, false, false, true),
+	)
 	c.subscribed = false
 	c.optionsResolver = mcon.NewMqttConnectionResolver()
 	return &c
@@ -96,7 +97,9 @@ func (c *MqttMessageQueue) IsOpen() bool {
 //   - credential        credential parameters
 // Returns 	error
 // error or nil no errors occured.
-func (c *MqttMessageQueue) OpenWithParams(correlationId string, connection *ccon.ConnectionParams, credential *cauth.CredentialParams) (err error) {
+func (c *MqttMessageQueue) OpenWithParams(correlationId string, connections []*ccon.ConnectionParams,
+	credential *cauth.CredentialParams) (err error) {
+	connection := connections[0]
 	c.topic = connection.GetAsString("topic")
 
 	options, err := c.optionsResolver.Compose(correlationId, connection, credential)
@@ -133,7 +136,7 @@ func (c *MqttMessageQueue) OpenWithParams(correlationId string, connection *ccon
 // error or nil no errors occured.
 func (c *MqttMessageQueue) Close(correlationId string) (err error) {
 	if c.client != nil {
-		c.messages = make([]msgqueues.MessageEnvelope, 0)
+		c.messages = make([]cqueues.MessageEnvelope, 0)
 		c.subscribed = false
 		c.receiver = nil
 		c.client.Disconnect(250)
@@ -148,7 +151,7 @@ func (c *MqttMessageQueue) Close(correlationId string) (err error) {
 //   - correlationId 	string (optional) transaction id to trace execution through call chain.
 // Retruns error or nil no errors occured.
 func (c *MqttMessageQueue) Clear(correlationId string) (err error) {
-	c.messages = make([]msgqueues.MessageEnvelope, 0)
+	c.messages = make([]cqueues.MessageEnvelope, 0)
 	return nil
 }
 
@@ -165,12 +168,12 @@ func (c *MqttMessageQueue) ReadMessageCount() (count int64, err error) {
 // Send method are sends a message into the queue.
 // Parameters:
 //   - correlationId string    (optional) transaction id to trace execution through call chain.
-//   - envelope *msgqueues.MessageEnvelope  a message envelop to be sent.
+//   - envelope *cqueues.MessageEnvelope  a message envelop to be sent.
 // Returns: error
 // error or nil for success.
-func (c *MqttMessageQueue) Send(correlationId string, envelop *msgqueues.MessageEnvelope) (err error) {
-	c.Counters.IncrementOne("queue." + c.GetName() + ".sent_messages")
-	c.Logger.Debug(envelop.Correlation_id, "Sent message %s via %s", envelop.ToString(), c.ToString())
+func (c *MqttMessageQueue) Send(correlationId string, envelop *cqueues.MessageEnvelope) (err error) {
+	c.Counters.IncrementOne("queue." + c.Name() + ".sent_messages")
+	c.Logger.Debug(envelop.CorrelationId, "Sent message %s via %s", envelop.String(), c.Name())
 	token := c.client.Publish(c.topic, 0, false, envelop.Message)
 	token.Wait()
 	return token.Error()
@@ -180,12 +183,12 @@ func (c *MqttMessageQueue) Send(correlationId string, envelop *msgqueues.Message
 // If there are no messages available in the queue it returns nil.
 // Parameters:
 //   - correlationId  string  (optional) transaction id to trace execution through call chain.
-// Returns: result *msgqueues.MessageEnvelope, err error
+// Returns: result *cqueues.MessageEnvelope, err error
 // message or error.
-func (c *MqttMessageQueue) Peek(correlationId string) (result *msgqueues.MessageEnvelope, err error) {
+func (c *MqttMessageQueue) Peek(correlationId string) (result *cqueues.MessageEnvelope, err error) {
 	// Subscribe to get messages
 	c.Subscribe()
-	var message msgqueues.MessageEnvelope
+	var message cqueues.MessageEnvelope
 	if len(c.messages) > 0 {
 		message = c.messages[0]
 		return &message, nil
@@ -200,22 +203,28 @@ func (c *MqttMessageQueue) Peek(correlationId string) (result *msgqueues.Message
 //   - correlationId     (optional) transaction id to trace execution through call chain.
 //   - messageCount      a maximum number of messages to peek.
 // Returns:          callback function that receives a list with messages or error.
-func (c *MqttMessageQueue) PeekBatch(correlationId string, messageCount int64) (result []msgqueues.MessageEnvelope, err error) {
+func (c *MqttMessageQueue) PeekBatch(correlationId string, messageCount int64) (result []*cqueues.MessageEnvelope, err error) {
 	// Subscribe to get messages
 	c.Subscribe()
-	return c.messages, nil
+
+	messages := []*cqueues.MessageEnvelope{}
+	for _, message := range c.messages {
+		messages = append(messages, &message)
+	}
+
+	return messages, nil
 }
 
 // Receive method are receives an incoming message and removes it from the queue.
 // Parameters:
 //  - correlationId   string   (optional) transaction id to trace execution through call chain.
 //  - waitTimeout  time.Duration     a timeout in milliseconds to wait for a message to come.
-// Returns:  result *msgqueues.MessageEnvelope, err error
+// Returns:  result *cqueues.MessageEnvelope, err error
 // receives a message or error.
-func (c *MqttMessageQueue) Receive(correlationId string, waitTimeout time.Duration) (result *msgqueues.MessageEnvelope, err error) {
+func (c *MqttMessageQueue) Receive(correlationId string, waitTimeout time.Duration) (result *cqueues.MessageEnvelope, err error) {
 
-	var message *msgqueues.MessageEnvelope
-	var msgBuf msgqueues.MessageEnvelope
+	var message *cqueues.MessageEnvelope
+	var msgBuf cqueues.MessageEnvelope
 	// Subscribe to get messages
 	c.Subscribe()
 	// Return message immediately if it exist
@@ -259,11 +268,11 @@ func (c *MqttMessageQueue) Receive(correlationId string, waitTimeout time.Durati
 // This method is usually used to extend the message processing time.
 // Important: This method is not supported by MQTT.
 // Parameters:
-//   - message   *msgqueues.MessageEnvelope    a message to extend its lock.
+//   - message   *cqueues.MessageEnvelope    a message to extend its lock.
 //   - lockTimeout  time.Duration  a locking timeout in milliseconds.
 // Returns: error
 // receives an error or nil for success.
-func (c *MqttMessageQueue) RenewLock(message *msgqueues.MessageEnvelope, lockTimeout time.Duration) (err error) {
+func (c *MqttMessageQueue) RenewLock(message *cqueues.MessageEnvelope, lockTimeout time.Duration) (err error) {
 	// Not supported
 	return nil
 }
@@ -272,10 +281,10 @@ func (c *MqttMessageQueue) RenewLock(message *msgqueues.MessageEnvelope, lockTim
 // This method is usually used to remove the message after successful processing.
 // Important: This method is not supported by MQTT.
 // Parameters:
-//   - message  *msgqueues.MessageEnvelope a message to remove.
+//   - message  *cqueues.MessageEnvelope a message to remove.
 // Returns: error
 // error or nil for success.
-func (c *MqttMessageQueue) Complete(message *msgqueues.MessageEnvelope) (err error) {
+func (c *MqttMessageQueue) Complete(message *cqueues.MessageEnvelope) (err error) {
 	// Not supported
 	return nil
 }
@@ -286,10 +295,10 @@ func (c *MqttMessageQueue) Complete(message *msgqueues.MessageEnvelope) (err err
 // or/and send to dead letter queue.
 // Important: This method is not supported by MQTT.
 // Parameters:
-//   - message *msgqueues.MessageEnvelope  a message to return.
+//   - message *cqueues.MessageEnvelope  a message to return.
 // Returns: error
 //  error or nil for success.
-func (c *MqttMessageQueue) Abandon(message *msgqueues.MessageEnvelope) (err error) {
+func (c *MqttMessageQueue) Abandon(message *cqueues.MessageEnvelope) (err error) {
 	// Not supported
 	return nil
 }
@@ -297,18 +306,18 @@ func (c *MqttMessageQueue) Abandon(message *msgqueues.MessageEnvelope) (err erro
 // Permanently removes a message from the queue and sends it to dead letter queue.
 // Important: This method is not supported by MQTT.
 // Parameters:
-//   - message  *msgqueues.MessageEnvelope a message to be removed.
+//   - message  *cqueues.MessageEnvelope a message to be removed.
 // Returns: error
 //  error or nil for success.
-func (c *MqttMessageQueue) MoveToDeadLetter(message *msgqueues.MessageEnvelope) (err error) {
+func (c *MqttMessageQueue) MoveToDeadLetter(message *cqueues.MessageEnvelope) (err error) {
 	// Not supported
 	return nil
 }
 
-func (c *MqttMessageQueue) toMessage(msg mqtt.Message) msgqueues.MessageEnvelope {
+func (c *MqttMessageQueue) toMessage(msg mqtt.Message) cqueues.MessageEnvelope {
 
-	envelop := msgqueues.NewMessageEnvelope("", msg.Topic(), string(msg.Payload()))
-	envelop.Message_id = strconv.FormatUint(uint64(msg.MessageID()), 16)
+	envelop := cqueues.NewMessageEnvelope("", msg.Topic(), msg.Payload())
+	envelop.MessageId = strconv.FormatUint(uint64(msg.MessageID()), 16)
 	return *envelop
 }
 
@@ -319,14 +328,14 @@ func (c *MqttMessageQueue) Subscribe() {
 		return
 	}
 
-	c.Logger.Trace("", "Started listening messages at %s", c.ToString())
+	c.Logger.Trace("", "Started listening messages at %s", c.Name())
 
 	// Subscribe to the topic
 	c.client.Subscribe(c.topic, 0, func(client mqtt.Client, msg mqtt.Message) {
 		envelop := c.toMessage(msg)
 
-		c.Counters.IncrementOne("queue." + c.GetName() + ".receivedmessages")
-		c.Logger.Debug(envelop.Correlation_id, "Received message %s via %s", msg, c.ToString())
+		c.Counters.IncrementOne("queue." + c.Name() + ".receivedmessages")
+		c.Logger.Debug(envelop.CorrelationId, "Received message %s via %s", msg, c.Name())
 
 		if c.receiver != nil {
 
@@ -356,20 +365,20 @@ func (c *MqttMessageQueue) Subscribe() {
 Listens for incoming messages and blocks the current thread until queue is closed.
 Parameters:
   - correlationId   string  (optional) transaction id to trace execution through call chain.
-  - receiver    msgqueues.IMessageReceiver      a receiver to receive incoming messages.
+  - receiver    cqueues.IMessageReceiver      a receiver to receive incoming messages.
 
 See IMessageReceiver
 See receive
 */
-func (c *MqttMessageQueue) Listen(correlationId string, receiver msgqueues.IMessageReceiver) {
+func (c *MqttMessageQueue) Listen(correlationId string, receiver cqueues.IMessageReceiver) error {
 	c.receiver = receiver
 	// var wg = sync.WaitGroup{}
 	// wg.Add(1)
 	go func() {
-		var message *msgqueues.MessageEnvelope
+		var message *cqueues.MessageEnvelope
 		for len(c.messages) > 0 && c.receiver != nil {
 			//message = c.messages.shift();
-			var msg msgqueues.MessageEnvelope
+			var msg cqueues.MessageEnvelope
 			message = nil
 			for len(c.messages) > 0 {
 				msg, c.messages = c.messages[0], c.messages[1:]
@@ -384,6 +393,7 @@ func (c *MqttMessageQueue) Listen(correlationId string, receiver msgqueues.IMess
 	}()
 
 	//wg.Wait()
+	return nil
 }
 
 // EndListen method are ends listening for incoming messages.

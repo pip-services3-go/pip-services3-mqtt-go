@@ -15,15 +15,15 @@ var queue *mqueue.MqttMessageQueue
 
 func TestMqttMessageQueue(t *testing.T) {
 
-	brokerHost := os.Getenv("MOSQUITTO_HOST")
+	brokerHost := os.Getenv("MQTT_SERVICE_HOST")
 	if brokerHost == "" {
 		brokerHost = "localhost"
 	}
-	brokerPort := os.Getenv("MOSQUITTO_PORT")
+	brokerPort := os.Getenv("MQTT_SERVICE_PORT")
 	if brokerPort == "" {
 		brokerPort = "1883"
 	}
-	brokerTopic := os.Getenv("MOSQUITTO_TOPIC")
+	brokerTopic := os.Getenv("MQTT_TOPIC")
 	if brokerTopic == "" {
 		brokerTopic = "/test"
 	}
@@ -56,7 +56,7 @@ func TestMqttMessageQueue(t *testing.T) {
 
 }
 func ReceiveAndSendMessage(t *testing.T) {
-	var envelop1 *msgqueues.MessageEnvelope = msgqueues.NewMessageEnvelope("123", "Test", "Test message")
+	var envelop1 *msgqueues.MessageEnvelope = msgqueues.NewMessageEnvelope("123", "Test", []byte("Test message"))
 	var envelop2 *msgqueues.MessageEnvelope
 
 	time.AfterFunc(500*time.Millisecond, func() {
@@ -74,7 +74,7 @@ func ReceiveAndSendMessage(t *testing.T) {
 }
 
 func OnMessage(t *testing.T) {
-	var envelop1 *msgqueues.MessageEnvelope = msgqueues.NewMessageEnvelope("123", "Test", "Test message")
+	var envelop1 *msgqueues.MessageEnvelope = msgqueues.NewMessageEnvelope("123", "Test", []byte("Test message"))
 	var envelop2 *msgqueues.MessageEnvelope
 
 	var reciver TestMsgReciver = TestMsgReciver{}

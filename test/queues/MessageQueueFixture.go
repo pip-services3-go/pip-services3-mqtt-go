@@ -19,7 +19,7 @@ func NewMessageQueueFixture(queue msgqueues.IMessageQueue) *MessageQueueFixture 
 }
 
 func (c *MessageQueueFixture) TestSendReceiveMessage(t *testing.T) {
-	var envelope1 *msgqueues.MessageEnvelope = msgqueues.NewMessageEnvelope("123", "Test", "Test message")
+	var envelope1 *msgqueues.MessageEnvelope = msgqueues.NewMessageEnvelope("123", "Test", []byte("Test message"))
 	var envelope2 *msgqueues.MessageEnvelope
 
 	c.queue.Send("", envelope1)
@@ -33,13 +33,13 @@ func (c *MessageQueueFixture) TestSendReceiveMessage(t *testing.T) {
 	envelope2 = result
 
 	assert.NotNil(t, envelope2)
-	assert.Equal(t, envelope1.Message_type, envelope2.Message_type)
+	assert.Equal(t, envelope1.MessageType, envelope2.MessageType)
 	assert.Equal(t, envelope1.Message, envelope2.Message)
-	assert.Equal(t, envelope1.Correlation_id, envelope2.Correlation_id)
+	assert.Equal(t, envelope1.CorrelationId, envelope2.CorrelationId)
 }
 
 func (c *MessageQueueFixture) TestReceiveSendMessage(t *testing.T) {
-	var envelope1 *msgqueues.MessageEnvelope = msgqueues.NewMessageEnvelope("123", "Test", "Test message")
+	var envelope1 *msgqueues.MessageEnvelope = msgqueues.NewMessageEnvelope("123", "Test", []byte("Test message"))
 	var envelope2 *msgqueues.MessageEnvelope
 
 	time.AfterFunc(500*time.Millisecond, func() {
@@ -51,14 +51,14 @@ func (c *MessageQueueFixture) TestReceiveSendMessage(t *testing.T) {
 	envelope2 = result
 
 	assert.NotNil(t, envelope2)
-	assert.Equal(t, envelope1.Message_type, envelope2.Message_type)
+	assert.Equal(t, envelope1.MessageType, envelope2.MessageType)
 	assert.Equal(t, envelope1.Message, envelope2.Message)
-	assert.Equal(t, envelope1.Correlation_id, envelope2.Correlation_id)
+	assert.Equal(t, envelope1.CorrelationId, envelope2.CorrelationId)
 
 }
 
 func (c *MessageQueueFixture) TestReceiveCompleteMessage(t *testing.T) {
-	var envelope1 *msgqueues.MessageEnvelope = msgqueues.NewMessageEnvelope("123", "Test", "Test message")
+	var envelope1 *msgqueues.MessageEnvelope = msgqueues.NewMessageEnvelope("123", "Test", []byte("Test message"))
 	var envelope2 *msgqueues.MessageEnvelope
 
 	err := c.queue.Send("", envelope1)
@@ -73,9 +73,9 @@ func (c *MessageQueueFixture) TestReceiveCompleteMessage(t *testing.T) {
 	envelope2 = result
 
 	assert.NotNil(t, envelope2)
-	assert.Equal(t, envelope1.Message_type, envelope2.Message_type)
+	assert.Equal(t, envelope1.MessageType, envelope2.MessageType)
 	assert.Equal(t, envelope1.Message, envelope2.Message)
-	assert.Equal(t, envelope1.Correlation_id, envelope2.Correlation_id)
+	assert.Equal(t, envelope1.CorrelationId, envelope2.CorrelationId)
 
 	c.queue.Complete(envelope2)
 	assert.Nil(t, envelope2.GetReference())
@@ -83,7 +83,7 @@ func (c *MessageQueueFixture) TestReceiveCompleteMessage(t *testing.T) {
 }
 
 func (c *MessageQueueFixture) TestReceiveAbandonMessage(t *testing.T) {
-	var envelope1 *msgqueues.MessageEnvelope = msgqueues.NewMessageEnvelope("123", "Test", "Test message")
+	var envelope1 *msgqueues.MessageEnvelope = msgqueues.NewMessageEnvelope("123", "Test", []byte("Test message"))
 	var envelope2 *msgqueues.MessageEnvelope
 
 	err := c.queue.Send("", envelope1)
@@ -94,9 +94,9 @@ func (c *MessageQueueFixture) TestReceiveAbandonMessage(t *testing.T) {
 	envelope2 = result
 
 	assert.NotNil(t, envelope2)
-	assert.Equal(t, envelope1.Message_type, envelope2.Message_type)
+	assert.Equal(t, envelope1.MessageType, envelope2.MessageType)
 	assert.Equal(t, envelope1.Message, envelope2.Message)
-	assert.Equal(t, envelope1.Correlation_id, envelope2.Correlation_id)
+	assert.Equal(t, envelope1.CorrelationId, envelope2.CorrelationId)
 
 	err = c.queue.Abandon(envelope2)
 	assert.Nil(t, err)
@@ -106,14 +106,14 @@ func (c *MessageQueueFixture) TestReceiveAbandonMessage(t *testing.T) {
 	envelope2 = result
 
 	assert.NotNil(t, envelope2)
-	assert.Equal(t, envelope1.Message_type, envelope2.Message_type)
+	assert.Equal(t, envelope1.MessageType, envelope2.MessageType)
 	assert.Equal(t, envelope1.Message, envelope2.Message)
-	assert.Equal(t, envelope1.Correlation_id, envelope2.Correlation_id)
+	assert.Equal(t, envelope1.CorrelationId, envelope2.CorrelationId)
 
 }
 
 func (c *MessageQueueFixture) TestSendPeekMessage(t *testing.T) {
-	var envelope1 *msgqueues.MessageEnvelope = msgqueues.NewMessageEnvelope("123", "Test", "Test message")
+	var envelope1 *msgqueues.MessageEnvelope = msgqueues.NewMessageEnvelope("123", "Test", []byte("Test message"))
 	var envelope2 *msgqueues.MessageEnvelope
 
 	err := c.queue.Send("", envelope1)
@@ -124,9 +124,9 @@ func (c *MessageQueueFixture) TestSendPeekMessage(t *testing.T) {
 	envelope2 = result
 
 	assert.NotNil(t, envelope2)
-	assert.Equal(t, envelope1.Message_type, envelope2.Message_type)
+	assert.Equal(t, envelope1.MessageType, envelope2.MessageType)
 	assert.Equal(t, envelope1.Message, envelope2.Message)
-	assert.Equal(t, envelope1.Correlation_id, envelope2.Correlation_id)
+	assert.Equal(t, envelope1.CorrelationId, envelope2.CorrelationId)
 
 }
 
@@ -137,7 +137,7 @@ func (c *MessageQueueFixture) TestPeekNoMessage(t *testing.T) {
 }
 
 func (c *MessageQueueFixture) TestMoveToDeadMessage(t *testing.T) {
-	var envelope1 *msgqueues.MessageEnvelope = msgqueues.NewMessageEnvelope("123", "Test", "Test message")
+	var envelope1 *msgqueues.MessageEnvelope = msgqueues.NewMessageEnvelope("123", "Test", []byte("Test message"))
 	var envelope2 *msgqueues.MessageEnvelope
 
 	err := c.queue.Send("", envelope1)
@@ -148,9 +148,9 @@ func (c *MessageQueueFixture) TestMoveToDeadMessage(t *testing.T) {
 	envelope2 = result
 
 	assert.NotNil(t, envelope2)
-	assert.Equal(t, envelope1.Message_type, envelope2.Message_type)
+	assert.Equal(t, envelope1.MessageType, envelope2.MessageType)
 	assert.Equal(t, envelope1.Message, envelope2.Message)
-	assert.Equal(t, envelope1.Correlation_id, envelope2.Correlation_id)
+	assert.Equal(t, envelope1.CorrelationId, envelope2.CorrelationId)
 
 	err = c.queue.MoveToDeadLetter(envelope2)
 	assert.Nil(t, err)
@@ -158,7 +158,7 @@ func (c *MessageQueueFixture) TestMoveToDeadMessage(t *testing.T) {
 }
 
 func (c *MessageQueueFixture) TestOnMessage(t *testing.T) {
-	var envelope1 *msgqueues.MessageEnvelope = msgqueues.NewMessageEnvelope("123", "Test", "Test message")
+	var envelope1 *msgqueues.MessageEnvelope = msgqueues.NewMessageEnvelope("123", "Test", []byte("Test message"))
 	var envelope2 *msgqueues.MessageEnvelope
 
 	var reciver TestMsgReciver = TestMsgReciver{}
@@ -179,9 +179,9 @@ func (c *MessageQueueFixture) TestOnMessage(t *testing.T) {
 	envelope2 = reciver.envelope
 
 	assert.NotNil(t, envelope2)
-	assert.Equal(t, envelope1.Message_type, envelope2.Message_type)
+	assert.Equal(t, envelope1.MessageType, envelope2.MessageType)
 	assert.Equal(t, envelope1.Message, envelope2.Message)
-	assert.Equal(t, envelope1.Correlation_id, envelope2.Correlation_id)
+	assert.Equal(t, envelope1.CorrelationId, envelope2.CorrelationId)
 
 	c.queue.EndListen("")
 }
