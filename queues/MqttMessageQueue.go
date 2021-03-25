@@ -1,7 +1,6 @@
 package queues
 
 import (
-	"encoding/base64"
 	"encoding/json"
 	"fmt"
 	"strconv"
@@ -10,11 +9,8 @@ import (
 
 	mqtt "github.com/eclipse/paho.mqtt.golang"
 	cconf "github.com/pip-services3-go/pip-services3-commons-go/config"
-	cconv "github.com/pip-services3-go/pip-services3-commons-go/convert"
 	cerr "github.com/pip-services3-go/pip-services3-commons-go/errors"
 	cref "github.com/pip-services3-go/pip-services3-commons-go/refer"
-	cauth "github.com/pip-services3-go/pip-services3-components-go/auth"
-	cconn "github.com/pip-services3-go/pip-services3-components-go/connect"
 	clog "github.com/pip-services3-go/pip-services3-components-go/log"
 	cqueues "github.com/pip-services3-go/pip-services3-messaging-go/queues"
 	connect "github.com/pip-services3-go/pip-services3-mqtt-go/connect"
@@ -225,16 +221,6 @@ func (c *MqttMessageQueue) Open(correlationId string) (err error) {
 	return err
 }
 
-// OpenWithParams method are opens the component with given connection and credential parameters.
-//  - correlationId     (optional) transaction id to trace execution through call chain.
-//  - connections        connection parameters
-//  - credential        credential parameters
-// Returns error or nil no errors occured.
-func (c *MqttMessageQueue) OpenWithParams(correlationId string, connections []*cconn.ConnectionParams,
-	credential *cauth.CredentialParams) error {
-	panic("Not supported")
-}
-
 // Closes component and frees used resources.
 //   - correlationId 	(optional) transaction id to trace execution through call chain.
 //   - Returns 			error or nil no errors occured.
@@ -281,22 +267,8 @@ func (c *MqttMessageQueue) fromMessage(message *cqueues.MessageEnvelope) ([]byte
 
 	data := message.Message
 	if c.serializeEnvelop {
-		// Todo change after MessageEnvelop is updated
-		jsonData := map[string]interface{}{
-			"message_id":     message.MessageId,
-			"correlation_id": message.CorrelationId,
-			"message_type":   message.MessageType,
-			"sent_time":      time.Now(), // message.SentTime,
-		}
-
-		if data != nil {
-			base64Text := make([]byte, base64.StdEncoding.EncodedLen(len(data)))
-			base64.StdEncoding.Encode(base64Text, []byte(data))
-			jsonData["message"] = string(base64Text)
-		}
-
 		var err error
-		data, err = json.Marshal(jsonData)
+		data, err = json.Marshal(message)
 		if err != nil {
 			return nil, err
 		}
@@ -309,22 +281,9 @@ func (c *MqttMessageQueue) toMessage(msg mqtt.Message) (*cqueues.MessageEnvelope
 	message := cqueues.NewEmptyMessageEnvelope()
 
 	if c.serializeEnvelop {
-		var jsonData map[string]interface{}
-		err := json.Unmarshal(msg.Payload(), &jsonData)
+		err := json.Unmarshal(msg.Payload(), message)
 		if err != nil {
 			return nil, err
-		}
-
-		message.MessageId = cconv.StringConverter.ToString(jsonData["message_id"])
-		message.CorrelationId = cconv.StringConverter.ToString(jsonData["correlation_id"])
-		message.MessageType = cconv.StringConverter.ToString(jsonData["message_type"])
-		message.SentTime = cconv.DateTimeConverter.ToDateTime(jsonData["sent_time"])
-
-		base64Text := cconv.StringConverter.ToString(jsonData["message"])
-		if base64Text != "" {
-			data := make([]byte, base64.StdEncoding.DecodedLen(len(base64Text)))
-			base64.StdEncoding.Decode(data, []byte(base64Text))
-			message.Message = data
 		}
 	} else {
 		message.MessageId = strconv.FormatUint(uint64(msg.MessageID()), 10)
