@@ -33,6 +33,7 @@ MqttMessageQueue are message queue that sends and receives messages via MQTT mes
   - password:                    user password
 - options:
   - serialize_message:    (optional) true to serialize entire message as JSON, false to send only message payload (default: true)
+  - autosubscribe:        (optional) true to automatically subscribe on option (default: false)
   - qos:                  (optional) quality of service level aka QOS (default: 0)
   - retain:               (optional) retention flag for published messages (default: false)
   - retry_connect:        (optional) turns on/off automated reconnect when connection is log (default: true)
@@ -92,6 +93,8 @@ type MqttMessageQueue struct {
 	topic            string
 	qos              byte
 	retain           bool
+	autoSubscribe    bool
+	subscribed       bool
 	messages         []cqueues.MessageEnvelope
 	receiver         cqueues.IMessageReceiver
 }
@@ -102,6 +105,7 @@ func NewMqttMessageQueue(name string) *MqttMessageQueue {
 	c := MqttMessageQueue{
 		defaultConfig: cconf.NewConfigParamsFromTuples(
 			"topic", nil,
+			"options.autosubscribe", false,
 			"options.serialize_envelop", true,
 			"options.retry_connect", true,
 			"options.connect_timeout", 30000,
@@ -132,6 +136,7 @@ func (c *MqttMessageQueue) Configure(config *cconf.ConfigParams) {
 
 	c.topic = config.GetAsStringWithDefault("topic", c.topic)
 	c.serializeEnvelop = config.GetAsBooleanWithDefault("options.serialize_envelop", c.serializeEnvelop)
+	c.autoSubscribe = config.GetAsBooleanWithDefault("options.autosubscribe", c.autoSubscribe)
 	c.qos = byte(config.GetAsIntegerWithDefault("options.qos", int(c.qos)))
 	c.retain = config.GetAsBooleanWithDefault("options.retain", c.retain)
 }
@@ -208,12 +213,12 @@ func (c *MqttMessageQueue) Open(correlationId string) (err error) {
 		return err
 	}
 
-	// Subscribe right away
-	topic := c.getTopic()
-	err = c.Connection.Subscribe(topic, c.qos, c)
-	if err != nil {
-		c.Logger.Error(correlationId, err, "Failed to subscribe to topic "+topic)
-		return err
+	// Automatically subscribe if needed
+	if c.autoSubscribe {
+		err = c.subscribe(correlationId)
+		if err != nil {
+			return err
+		}
 	}
 
 	c.opened = true
@@ -241,8 +246,11 @@ func (c *MqttMessageQueue) Close(correlationId string) (err error) {
 	}
 
 	// Unsubscribe from topic
-	topic := c.getTopic()
-	c.Connection.Unsubscribe(topic, c)
+	if c.subscribed {
+		topic := c.getTopic()
+		c.Connection.Unsubscribe(topic, c)
+		c.subscribed = false
+	}
 
 	c.Lock.Lock()
 	defer c.Lock.Unlock()
@@ -258,6 +266,27 @@ func (c *MqttMessageQueue) getTopic() string {
 		return c.topic
 	}
 	return c.Name()
+}
+
+func (c *MqttMessageQueue) subscribe(correlationId string) error {
+	c.Lock.Lock()
+	defer c.Lock.Unlock()
+
+	// Check if already were subscribed
+	if c.subscribed {
+		return nil
+	}
+
+	// Subscribe to the topic
+	topic := c.getTopic()
+	err := c.Connection.Subscribe(topic, c.qos, c)
+	if err != nil {
+		c.Logger.Error(correlationId, err, "Failed to subscribe to topic "+topic)
+		return err
+	}
+
+	c.subscribed = true
+	return nil
 }
 
 func (c *MqttMessageQueue) fromMessage(message *cqueues.MessageEnvelope) ([]byte, error) {
@@ -290,6 +319,7 @@ func (c *MqttMessageQueue) toMessage(msg mqtt.Message) (*cqueues.MessageEnvelope
 		message.MessageType = msg.Topic()
 		message.Message = msg.Payload()
 	}
+	message.SetReference(msg)
 
 	return message, nil
 }
@@ -358,6 +388,12 @@ func (c *MqttMessageQueue) Peek(correlationId string) (*cqueues.MessageEnvelope,
 		return nil, err
 	}
 
+	// Subscribe if needed
+	err = c.subscribe(correlationId)
+	if err != nil {
+		return nil, err
+	}
+
 	var message *cqueues.MessageEnvelope
 
 	// Pick a message
@@ -387,6 +423,12 @@ func (c *MqttMessageQueue) PeekBatch(correlationId string, messageCount int64) (
 		return nil, err
 	}
 
+	// Subscribe if needed
+	err = c.subscribe(correlationId)
+	if err != nil {
+		return nil, err
+	}
+
 	c.Lock.Lock()
 	batchMessages := c.messages
 	if messageCount <= (int64)(len(batchMessages)) {
@@ -412,6 +454,12 @@ func (c *MqttMessageQueue) PeekBatch(correlationId string, messageCount int64) (
 // receives a message or error.
 func (c *MqttMessageQueue) Receive(correlationId string, waitTimeout time.Duration) (*cqueues.MessageEnvelope, error) {
 	err := c.CheckOpen(correlationId)
+	if err != nil {
+		return nil, err
+	}
+
+	// Subscribe if needed
+	err = c.subscribe(correlationId)
 	if err != nil {
 		return nil, err
 	}
@@ -549,6 +597,12 @@ func (c *MqttMessageQueue) sendMessageToReceiver(receiver cqueues.IMessageReceiv
 // See receive
 func (c *MqttMessageQueue) Listen(correlationId string, receiver cqueues.IMessageReceiver) error {
 	err := c.CheckOpen(correlationId)
+	if err != nil {
+		return err
+	}
+
+	// Subscribe if needed
+	err = c.subscribe(correlationId)
 	if err != nil {
 		return err
 	}
