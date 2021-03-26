@@ -19,6 +19,7 @@ import (
  you can reduce number of used connections.
 
  ### Configuration parameters ###
+  - client_id:               (optional) name of the client id
   - connection(s):
     - discovery_key:               (optional) a key to retrieve the connection from [[https://pip-services3-node.github.io/pip-services3-components-node/interfaces/connect.idiscovery.html IDiscovery]]
     - host:                        host name or IP address
@@ -55,6 +56,7 @@ type MqttConnection struct {
 	subscriptions []*MqttSubscription
 	lock          sync.Mutex
 
+	clientId         string
 	retryConnect     bool
 	connectTimeout   int
 	reconnectTimeout int
@@ -93,6 +95,7 @@ func (c *MqttConnection) Configure(config *cconf.ConfigParams) {
 
 	c.Options = c.Options.Override(config.GetSection("options"))
 
+	c.clientId = config.GetAsStringWithDefault("client_id", c.clientId)
 	c.retryConnect = config.GetAsBooleanWithDefault("options.retry_connect", c.retryConnect)
 	c.connectTimeout = config.GetAsIntegerWithDefault("options.connect_timeout", c.connectTimeout)
 	c.reconnectTimeout = config.GetAsIntegerWithDefault("options.reconnect_timeout", c.reconnectTimeout)
@@ -141,11 +144,11 @@ func (c *MqttConnection) Open(correlationId string) error {
 		opts.SetPassword(passwd)
 	}
 
+	opts.SetClientID(c.clientId)
 	opts.SetAutoReconnect(c.retryConnect)
 	opts.SetConnectTimeout(time.Millisecond * time.Duration(c.connectTimeout))
 	opts.SetConnectRetryInterval(time.Millisecond * time.Duration(c.reconnectTimeout))
 	opts.SetKeepAlive(time.Millisecond * time.Duration(c.keepAliveTimeout))
-	//opts.SetClientID("go-simple")
 	//opts.SetDefaultPublishHandler(f)
 
 	//create and start a client using the above ClientOptions
@@ -187,8 +190,16 @@ func (c *MqttConnection) GetConnection() mqtt.Client {
 	return c.Connection
 }
 
-func (c *MqttConnection) GetQueueNames() ([]string, error) {
+func (c *MqttConnection) ReadQueueNames() ([]string, error) {
 	return []string{}, nil
+}
+
+func (c *MqttConnection) CreateQueue() error {
+	return nil
+}
+
+func (c *MqttConnection) DeleteQueue() error {
+	return nil
 }
 
 func (c *MqttConnection) checkOpen() error {

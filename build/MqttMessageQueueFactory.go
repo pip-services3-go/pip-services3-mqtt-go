@@ -1,9 +1,8 @@
 package build
 
 import (
-	cconf "github.com/pip-services3-go/pip-services3-commons-go/config"
 	cref "github.com/pip-services3-go/pip-services3-commons-go/refer"
-	"github.com/pip-services3-go/pip-services3-components-go/build"
+	"github.com/pip-services3-go/pip-services3-messaging-go/build"
 	cqueues "github.com/pip-services3-go/pip-services3-messaging-go/queues"
 	"github.com/pip-services3-go/pip-services3-mqtt-go/queues"
 )
@@ -14,14 +13,14 @@ import (
 // See Factory
 // See MqttMessageQueue
 type MqttMessageQueueFactory struct {
-	build.Factory
-	config     *cconf.ConfigParams
-	references cref.IReferences
+	build.MessageQueueFactory
 }
 
 // NewMqttMessageQueueFactory method are create a new instance of the factory.
 func NewMqttMessageQueueFactory() *MqttMessageQueueFactory {
-	c := MqttMessageQueueFactory{}
+	c := MqttMessageQueueFactory{
+		MessageQueueFactory: *build.InheritMessageQueueFactory(),
+	}
 
 	mqttQueueDescriptor := cref.NewDescriptor("pip-services", "message-queue", "mqtt", "*", "1.0")
 
@@ -37,14 +36,6 @@ func NewMqttMessageQueueFactory() *MqttMessageQueueFactory {
 	return &c
 }
 
-func (c *MqttMessageQueueFactory) Configure(config *cconf.ConfigParams) {
-	c.config = config
-}
-
-func (c *MqttMessageQueueFactory) SetReferences(references cref.IReferences) {
-	c.references = references
-}
-
 // Creates a message queue component and assigns its name.
 //
 // Parameters:
@@ -52,11 +43,11 @@ func (c *MqttMessageQueueFactory) SetReferences(references cref.IReferences) {
 func (c *MqttMessageQueueFactory) CreateQueue(name string) cqueues.IMessageQueue {
 	queue := queues.NewMqttMessageQueue(name)
 
-	if c.config != nil {
-		queue.Configure(c.config)
+	if c.Config != nil {
+		queue.Configure(c.Config)
 	}
-	if c.references != nil {
-		queue.SetReferences(c.references)
+	if c.References != nil {
+		queue.SetReferences(c.References)
 	}
 
 	return queue
