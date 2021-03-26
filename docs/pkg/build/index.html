@@ -127,6 +127,9 @@
 					<dd>&nbsp; &nbsp; <a href="index.html#NewMqttMessageQueueFactory">func NewMqttMessageQueueFactory() *MqttMessageQueueFactory</a></dd>
 				
 				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#MqttMessageQueueFactory.CreateQueue">func (c *MqttMessageQueueFactory) CreateQueue(name string) cqueues.IMessageQueue</a></dd>
+				
 			
 			
 			</dl>
@@ -200,7 +203,7 @@ NewDefaultMqttFactory method are create a new instance of the factory.
 		
 			
 			
-			<h2 id="MqttMessageQueueFactory">type <a href="http://localhost:6060/src/build/MqttMessageQueueFactory.go?s=482:597#L5">MqttMessageQueueFactory</a>
+			<h2 id="MqttMessageQueueFactory">type <a href="http://localhost:6060/src/build/MqttMessageQueueFactory.go?s=555:670#L6">MqttMessageQueueFactory</a>
 				<a class="permalink" href="index.html#MqttMessageQueueFactory">&#xb6;</a>
 				
 				
@@ -230,7 +233,7 @@ See MqttMessageQueue
 
 			
 				
-				<h3 id="NewMqttMessageQueueFactory">func <a href="http://localhost:6060/src/build/MqttMessageQueueFactory.go?s=678:736#L12">NewMqttMessageQueueFactory</a>
+				<h3 id="NewMqttMessageQueueFactory">func <a href="http://localhost:6060/src/build/MqttMessageQueueFactory.go?s=751:809#L13">NewMqttMessageQueueFactory</a>
 					<a class="permalink" href="index.html#NewMqttMessageQueueFactory">&#xb6;</a>
 					
 					
@@ -244,6 +247,26 @@ NewMqttMessageQueueFactory method are create a new instance of the factory.
 				
 			
 
+			
+				
+				<h3 id="MqttMessageQueueFactory.CreateQueue">func (*MqttMessageQueueFactory) <a href="http://localhost:6060/src/build/MqttMessageQueueFactory.go?s=1292:1372#L34">CreateQueue</a>
+					<a class="permalink" href="index.html#MqttMessageQueueFactory.CreateQueue">&#xb6;</a>
+					
+					
+				</h3>
+				<pre>func (c *<a href="index.html#MqttMessageQueueFactory">MqttMessageQueueFactory</a>) CreateQueue(name <a href="http://localhost:6060/pkg/builtin/#string">string</a>) <a href="http://localhost:6060/pkg/github.com/pip-services3-go/pip-services3-messaging-go/queues/">cqueues</a>.<a href="http://localhost:6060/pkg/github.com/pip-services3-go/pip-services3-messaging-go/queues/#IMessageQueue">IMessageQueue</a></pre>
+				<p>
+Creates a message queue component and assigns its name.
+</p>
+<p>
+Parameters:
+</p>
+<pre>- name: a name of the created message queue.
+</pre>
+
+				
+				
+				
 			
 		
 	

@@ -37,6 +37,14 @@ func NewMqttMessageQueueFactory() *MqttMessageQueueFactory {
 	return &c
 }
 
+func (c *MqttMessageQueueFactory) Configure(config *cconf.ConfigParams) {
+	c.config = config
+}
+
+func (c *MqttMessageQueueFactory) SetReferences(references cref.IReferences) {
+	c.references = references
+}
+
 // Creates a message queue component and assigns its name.
 //
 // Parameters:

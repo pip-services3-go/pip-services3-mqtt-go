@@ -153,9 +153,6 @@
 					<dd>&nbsp; &nbsp; <a href="index.html#MqttMessageQueue.Open">func (c *MqttMessageQueue) Open(correlationId string) (err error)</a></dd>
 				
 					
-					<dd>&nbsp; &nbsp; <a href="index.html#MqttMessageQueue.OpenWithParams">func (c *MqttMessageQueue) OpenWithParams(correlationId string, connections []*cconn.ConnectionParams, credential *cauth.CredentialParams) error</a></dd>
-				
-					
 					<dd>&nbsp; &nbsp; <a href="index.html#MqttMessageQueue.Peek">func (c *MqttMessageQueue) Peek(correlationId string) (*cqueues.MessageEnvelope, error)</a></dd>
 				
 					
@@ -207,7 +204,7 @@
 		
 			
 			
-			<h2 id="MqttMessageQueue">type <a href="http://localhost:6060/src/queues/MqttMessageQueue.go?s=3151:3729#L69">MqttMessageQueue</a>
+			<h2 id="MqttMessageQueue">type <a href="http://localhost:6060/src/queues/MqttMessageQueue.go?s=2919:3497#L65">MqttMessageQueue</a>
 				<a class="permalink" href="index.html#MqttMessageQueue">&#xb6;</a>
 				
 				
@@ -302,7 +299,7 @@ Example:
 
 			
 				
-				<h3 id="NewMqttMessageQueue">func <a href="http://localhost:6060/src/queues/MqttMessageQueue.go?s=3821:3876#L95">NewMqttMessageQueue</a>
+				<h3 id="NewMqttMessageQueue">func <a href="http://localhost:6060/src/queues/MqttMessageQueue.go?s=3589:3644#L91">NewMqttMessageQueue</a>
 					<a class="permalink" href="index.html#NewMqttMessageQueue">&#xb6;</a>
 					
 					
@@ -320,7 +317,7 @@ Creates a new instance of the queue component.
 
 			
 				
-				<h3 id="MqttMessageQueue.Abandon">func (*MqttMessageQueue) <a href="http://localhost:6060/src/queues/MqttMessageQueue.go?s=17387:17461#L542">Abandon</a>
+				<h3 id="MqttMessageQueue.Abandon">func (*MqttMessageQueue) <a href="http://localhost:6060/src/queues/MqttMessageQueue.go?s=15576:15650#L501">Abandon</a>
 					<a class="permalink" href="index.html#MqttMessageQueue.Abandon">&#xb6;</a>
 					
 					
@@ -347,7 +344,7 @@ Returns: error
 				
 			
 				
-				<h3 id="MqttMessageQueue.Clear">func (*MqttMessageQueue) <a href="http://localhost:6060/src/queues/MqttMessageQueue.go?s=11500:11560#L361">Clear</a>
+				<h3 id="MqttMessageQueue.Clear">func (*MqttMessageQueue) <a href="http://localhost:6060/src/queues/MqttMessageQueue.go?s=9689:9749#L320">Clear</a>
 					<a class="permalink" href="index.html#MqttMessageQueue.Clear">&#xb6;</a>
 					
 					
@@ -368,7 +365,7 @@ Returns error or nil no errors occured.
 				
 			
 				
-				<h3 id="MqttMessageQueue.Close">func (*MqttMessageQueue) <a href="http://localhost:6060/src/queues/MqttMessageQueue.go?s=8019:8085#L231">Close</a>
+				<h3 id="MqttMessageQueue.Close">func (*MqttMessageQueue) <a href="http://localhost:6060/src/queues/MqttMessageQueue.go?s=7289:7355#L217">Close</a>
 					<a class="permalink" href="index.html#MqttMessageQueue.Close">&#xb6;</a>
 					
 					
@@ -386,7 +383,7 @@ Closes component and frees used resources.
 				
 			
 				
-				<h3 id="MqttMessageQueue.Complete">func (*MqttMessageQueue) <a href="http://localhost:6060/src/queues/MqttMessageQueue.go?s=16754:16829#L528">Complete</a>
+				<h3 id="MqttMessageQueue.Complete">func (*MqttMessageQueue) <a href="http://localhost:6060/src/queues/MqttMessageQueue.go?s=14943:15018#L487">Complete</a>
 					<a class="permalink" href="index.html#MqttMessageQueue.Complete">&#xb6;</a>
 					
 					
@@ -410,7 +407,7 @@ error or nil for success.
 				
 			
 				
-				<h3 id="MqttMessageQueue.Configure">func (*MqttMessageQueue) <a href="http://localhost:6060/src/queues/MqttMessageQueue.go?s=4682:4746#L121">Configure</a>
+				<h3 id="MqttMessageQueue.Configure">func (*MqttMessageQueue) <a href="http://localhost:6060/src/queues/MqttMessageQueue.go?s=4450:4514#L117">Configure</a>
 					<a class="permalink" href="index.html#MqttMessageQueue.Configure">&#xb6;</a>
 					
 					
@@ -427,7 +424,7 @@ Configures component by passing configuration parameters.
 				
 			
 				
-				<h3 id="MqttMessageQueue.EndListen">func (*MqttMessageQueue) <a href="http://localhost:6060/src/queues/MqttMessageQueue.go?s=19513:19571#L612">EndListen</a>
+				<h3 id="MqttMessageQueue.EndListen">func (*MqttMessageQueue) <a href="http://localhost:6060/src/queues/MqttMessageQueue.go?s=17702:17760#L571">EndListen</a>
 					<a class="permalink" href="index.html#MqttMessageQueue.EndListen">&#xb6;</a>
 					
 					
@@ -446,7 +443,7 @@ Parameters:
 				
 			
 				
-				<h3 id="MqttMessageQueue.IsOpen">func (*MqttMessageQueue) <a href="http://localhost:6060/src/queues/MqttMessageQueue.go?s=6292:6332#L172">IsOpen</a>
+				<h3 id="MqttMessageQueue.IsOpen">func (*MqttMessageQueue) <a href="http://localhost:6060/src/queues/MqttMessageQueue.go?s=6060:6100#L168">IsOpen</a>
 					<a class="permalink" href="index.html#MqttMessageQueue.IsOpen">&#xb6;</a>
 					
 					
@@ -462,7 +459,7 @@ Returns true if the component has been opened and false otherwise.
 				
 			
 				
-				<h3 id="MqttMessageQueue.Listen">func (*MqttMessageQueue) <a href="http://localhost:6060/src/queues/MqttMessageQueue.go?s=18672:18768#L581">Listen</a>
+				<h3 id="MqttMessageQueue.Listen">func (*MqttMessageQueue) <a href="http://localhost:6060/src/queues/MqttMessageQueue.go?s=16861:16957#L540">Listen</a>
 					<a class="permalink" href="index.html#MqttMessageQueue.Listen">&#xb6;</a>
 					
 					
@@ -485,7 +482,7 @@ See receive
 				
 			
 				
-				<h3 id="MqttMessageQueue.MoveToDeadLetter">func (*MqttMessageQueue) <a href="http://localhost:6060/src/queues/MqttMessageQueue.go?s=17761:17844#L553">MoveToDeadLetter</a>
+				<h3 id="MqttMessageQueue.MoveToDeadLetter">func (*MqttMessageQueue) <a href="http://localhost:6060/src/queues/MqttMessageQueue.go?s=15950:16033#L512">MoveToDeadLetter</a>
 					<a class="permalink" href="index.html#MqttMessageQueue.MoveToDeadLetter">&#xb6;</a>
 					
 					
@@ -509,7 +506,7 @@ Returns: error
 				
 			
 				
-				<h3 id="MqttMessageQueue.OnMessage">func (*MqttMessageQueue) <a href="http://localhost:6060/src/queues/MqttMessageQueue.go?s=10497:10551#L328">OnMessage</a>
+				<h3 id="MqttMessageQueue.OnMessage">func (*MqttMessageQueue) <a href="http://localhost:6060/src/queues/MqttMessageQueue.go?s=8686:8740#L287">OnMessage</a>
 					<a class="permalink" href="index.html#MqttMessageQueue.OnMessage">&#xb6;</a>
 					
 					
@@ -521,7 +518,7 @@ Returns: error
 				
 			
 				
-				<h3 id="MqttMessageQueue.Open">func (*MqttMessageQueue) <a href="http://localhost:6060/src/queues/MqttMessageQueue.go?s=6517:6582#L179">Open</a>
+				<h3 id="MqttMessageQueue.Open">func (*MqttMessageQueue) <a href="http://localhost:6060/src/queues/MqttMessageQueue.go?s=6285:6350#L175">Open</a>
 					<a class="permalink" href="index.html#MqttMessageQueue.Open">&#xb6;</a>
 					
 					
@@ -539,30 +536,7 @@ Opens the component.
 				
 			
 				
-				<h3 id="MqttMessageQueue.OpenWithParams">func (*MqttMessageQueue) <a href="http://localhost:6060/src/queues/MqttMessageQueue.go?s=7661:7806#L223">OpenWithParams</a>
-					<a class="permalink" href="index.html#MqttMessageQueue.OpenWithParams">&#xb6;</a>
-					
-					
-				</h3>
-				<pre>func (c *<a href="index.html#MqttMessageQueue">MqttMessageQueue</a>) OpenWithParams(correlationId <a href="http://localhost:6060/pkg/builtin/#string">string</a>, connections []*<a href="http://localhost:6060/pkg/github.com/pip-services3-go/pip-services3-components-go/connect/">cconn</a>.<a href="http://localhost:6060/pkg/github.com/pip-services3-go/pip-services3-components-go/connect/#ConnectionParams">ConnectionParams</a>,
-    credential *<a href="http://localhost:6060/pkg/github.com/pip-services3-go/pip-services3-components-go/auth/">cauth</a>.<a href="http://localhost:6060/pkg/github.com/pip-services3-go/pip-services3-components-go/auth/#CredentialParams">CredentialParams</a>) <a href="http://localhost:6060/pkg/builtin/#error">error</a></pre>
-				<p>
-OpenWithParams method are opens the component with given connection and credential parameters.
-</p>
-<pre>- correlationId     (optional) transaction id to trace execution through call chain.
-- connections        connection parameters
-- credential        credential parameters
-</pre>
-<p>
-Returns error or nil no errors occured.
-</p>
-
-				
-				
-				
-			
-				
-				<h3 id="MqttMessageQueue.Peek">func (*MqttMessageQueue) <a href="http://localhost:6060/src/queues/MqttMessageQueue.go?s=12304:12391#L386">Peek</a>
+				<h3 id="MqttMessageQueue.Peek">func (*MqttMessageQueue) <a href="http://localhost:6060/src/queues/MqttMessageQueue.go?s=10493:10580#L345">Peek</a>
 					<a class="permalink" href="index.html#MqttMessageQueue.Peek">&#xb6;</a>
 					
 					
@@ -585,7 +559,7 @@ message or error.
 				
 			
 				
-				<h3 id="MqttMessageQueue.PeekBatch">func (*MqttMessageQueue) <a href="http://localhost:6060/src/queues/MqttMessageQueue.go?s=13228:13342#L415">PeekBatch</a>
+				<h3 id="MqttMessageQueue.PeekBatch">func (*MqttMessageQueue) <a href="http://localhost:6060/src/queues/MqttMessageQueue.go?s=11417:11531#L374">PeekBatch</a>
 					<a class="permalink" href="index.html#MqttMessageQueue.PeekBatch">&#xb6;</a>
 					
 					
@@ -609,7 +583,7 @@ Returns:          callback function that receives a list with messages or error.
 				
 			
 				
-				<h3 id="MqttMessageQueue.ReadMessageCount">func (*MqttMessageQueue) <a href="http://localhost:6060/src/queues/MqttMessageQueue.go?s=11805:11865#L372">ReadMessageCount</a>
+				<h3 id="MqttMessageQueue.ReadMessageCount">func (*MqttMessageQueue) <a href="http://localhost:6060/src/queues/MqttMessageQueue.go?s=9994:10054#L331">ReadMessageCount</a>
 					<a class="permalink" href="index.html#MqttMessageQueue.ReadMessageCount">&#xb6;</a>
 					
 					
@@ -625,7 +599,7 @@ Returns number of messages or error.
 				
 			
 				
-				<h3 id="MqttMessageQueue.Receive">func (*MqttMessageQueue) <a href="http://localhost:6060/src/queues/MqttMessageQueue.go?s=14194:14311#L444">Receive</a>
+				<h3 id="MqttMessageQueue.Receive">func (*MqttMessageQueue) <a href="http://localhost:6060/src/queues/MqttMessageQueue.go?s=12383:12500#L403">Receive</a>
 					<a class="permalink" href="index.html#MqttMessageQueue.Receive">&#xb6;</a>
 					
 					
@@ -648,7 +622,7 @@ receives a message or error.
 				
 			
 				
-				<h3 id="MqttMessageQueue.RenewLock">func (*MqttMessageQueue) <a href="http://localhost:6060/src/queues/MqttMessageQueue.go?s=16282:16391#L516">RenewLock</a>
+				<h3 id="MqttMessageQueue.RenewLock">func (*MqttMessageQueue) <a href="http://localhost:6060/src/queues/MqttMessageQueue.go?s=14471:14580#L475">RenewLock</a>
 					<a class="permalink" href="index.html#MqttMessageQueue.RenewLock">&#xb6;</a>
 					
 					
@@ -673,7 +647,7 @@ receives an error or nil for success.
 				
 			
 				
-				<h3 id="MqttMessageQueue.Send">func (*MqttMessageQueue) <a href="http://localhost:6060/src/queues/MqttMessageQueue.go?s=15184:15277#L480">Send</a>
+				<h3 id="MqttMessageQueue.Send">func (*MqttMessageQueue) <a href="http://localhost:6060/src/queues/MqttMessageQueue.go?s=13373:13466#L439">Send</a>
 					<a class="permalink" href="index.html#MqttMessageQueue.Send">&#xb6;</a>
 					
 					
@@ -695,7 +669,7 @@ Returns: error or nil for success.
 				
 			
 				
-				<h3 id="MqttMessageQueue.SetReferences">func (*MqttMessageQueue) <a href="http://localhost:6060/src/queues/MqttMessageQueue.go?s=5276:5345#L135">SetReferences</a>
+				<h3 id="MqttMessageQueue.SetReferences">func (*MqttMessageQueue) <a href="http://localhost:6060/src/queues/MqttMessageQueue.go?s=5044:5113#L131">SetReferences</a>
 					<a class="permalink" href="index.html#MqttMessageQueue.SetReferences">&#xb6;</a>
 					
 					
@@ -712,7 +686,7 @@ Sets references to dependent components.
 				
 			
 				
-				<h3 id="MqttMessageQueue.UnsetReferences">func (*MqttMessageQueue) <a href="http://localhost:6060/src/queues/MqttMessageQueue.go?s=5849:5893#L155">UnsetReferences</a>
+				<h3 id="MqttMessageQueue.UnsetReferences">func (*MqttMessageQueue) <a href="http://localhost:6060/src/queues/MqttMessageQueue.go?s=5617:5661#L151">UnsetReferences</a>
 					<a class="permalink" href="index.html#MqttMessageQueue.UnsetReferences">&#xb6;</a>
 					
 					
