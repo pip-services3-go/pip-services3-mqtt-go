@@ -297,6 +297,7 @@ func (c *MqttMessageQueue) fromMessage(message *cqueues.MessageEnvelope) ([]byte
 
 	data := message.Message
 	if c.serializeEnvelope {
+		message.SentTime = time.Now()
 		var err error
 		data, err = json.Marshal(message)
 		if err != nil {
