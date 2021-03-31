@@ -32,7 +32,7 @@ MqttMessageQueue are message queue that sends and receives messages via MQTT mes
   - username:                    user name
   - password:                    user password
 - options:
-  - serialize_message:    (optional) true to serialize entire message as JSON, false to send only message payload (default: true)
+  - serialize_envelope:    (optional) true to serialize entire message as JSON, false to send only message payload (default: true)
   - autosubscribe:        (optional) true to automatically subscribe on option (default: false)
   - qos:                  (optional) quality of service level aka QOS (default: 0)
   - retain:               (optional) retention flag for published messages (default: false)
@@ -89,14 +89,14 @@ type MqttMessageQueue struct {
 	//The MQTT connection component.
 	Connection *connect.MqttConnection
 
-	serializeEnvelop bool
-	topic            string
-	qos              byte
-	retain           bool
-	autoSubscribe    bool
-	subscribed       bool
-	messages         []cqueues.MessageEnvelope
-	receiver         cqueues.IMessageReceiver
+	serializeEnvelope bool
+	topic             string
+	qos               byte
+	retain            bool
+	autoSubscribe     bool
+	subscribed        bool
+	messages          []cqueues.MessageEnvelope
+	receiver          cqueues.IMessageReceiver
 }
 
 // Creates a new instance of the queue component.
@@ -106,7 +106,7 @@ func NewMqttMessageQueue(name string) *MqttMessageQueue {
 		defaultConfig: cconf.NewConfigParamsFromTuples(
 			"topic", nil,
 			"options.autosubscribe", false,
-			"options.serialize_envelop", true,
+			"options.serialize_envelope", false,
 			"options.retry_connect", true,
 			"options.connect_timeout", 30000,
 			"options.reconnect_timeout", 1000,
@@ -119,6 +119,7 @@ func NewMqttMessageQueue(name string) *MqttMessageQueue {
 	c.MessageQueue = *cqueues.InheritMessageQueue(&c, name,
 		cqueues.NewMessagingCapabilities(false, true, true, true, true, false, false, false, true))
 	c.DependencyResolver = cref.NewDependencyResolver()
+	c.DependencyResolver.Put("connection", cref.NewDescriptor("pip-services", "connection", "mqtt", "*", "1.0"))
 	c.DependencyResolver.Configure(c.defaultConfig)
 
 	c.messages = make([]cqueues.MessageEnvelope, 0)
@@ -135,7 +136,7 @@ func (c *MqttMessageQueue) Configure(config *cconf.ConfigParams) {
 	c.DependencyResolver.Configure(config)
 
 	c.topic = config.GetAsStringWithDefault("topic", c.topic)
-	c.serializeEnvelop = config.GetAsBooleanWithDefault("options.serialize_envelop", c.serializeEnvelop)
+	c.serializeEnvelope = config.GetAsBooleanWithDefault("options.serialize_envelope", c.serializeEnvelope)
 	c.autoSubscribe = config.GetAsBooleanWithDefault("options.autosubscribe", c.autoSubscribe)
 	c.qos = byte(config.GetAsIntegerWithDefault("options.qos", int(c.qos)))
 	c.retain = config.GetAsBooleanWithDefault("options.retain", c.retain)
@@ -206,7 +207,7 @@ func (c *MqttMessageQueue) Open(correlationId string) (err error) {
 	}
 
 	if err == nil && !c.Connection.IsOpen() {
-		err = cerr.NewConnectionError(correlationId, "CONNECT_FAILED", "MQTT connection is not opened")
+		err = cerr.NewInvalidStateError(correlationId, "CONNECT_FAILED", "MQTT connection is not opened")
 	}
 
 	if err != nil {
@@ -295,7 +296,7 @@ func (c *MqttMessageQueue) fromMessage(message *cqueues.MessageEnvelope) ([]byte
 	}
 
 	data := message.Message
-	if c.serializeEnvelop {
+	if c.serializeEnvelope {
 		var err error
 		data, err = json.Marshal(message)
 		if err != nil {
@@ -309,7 +310,7 @@ func (c *MqttMessageQueue) fromMessage(message *cqueues.MessageEnvelope) ([]byte
 func (c *MqttMessageQueue) toMessage(msg mqtt.Message) (*cqueues.MessageEnvelope, error) {
 	message := cqueues.NewEmptyMessageEnvelope()
 
-	if c.serializeEnvelop {
+	if c.serializeEnvelope {
 		err := json.Unmarshal(msg.Payload(), message)
 		if err != nil {
 			return nil, err
@@ -339,7 +340,7 @@ func (c *MqttMessageQueue) OnMessage(msg mqtt.Message) {
 	}
 
 	c.Counters.IncrementOne("queue." + c.Name() + ".received_messages")
-	c.Logger.Debug(message.CorrelationId, "Received message %s via %s", msg, c.Name())
+	c.Logger.Debug(message.CorrelationId, "Received message %s via %s", message, c.Name())
 
 	// Send message to receiver if its set or put it into the queue
 	c.Lock.Lock()

@@ -8,7 +8,7 @@ Migrated to a new messaging model
 * **build** - Added MqttMessageQueueFactory component
 * **connect** - Added MqttConnection component
 * **queues** - Reimplemented the queue to work with shared connection
-* **queues** - Added serialize_envelop option to queue to send JSON messages
+* **queues** - Added serialize_envelope option to queue to send JSON messages
 
 ## <a name="1.0.1"></a> 1.0.1 (2020-03-13)
 

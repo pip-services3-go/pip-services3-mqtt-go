@@ -82,7 +82,7 @@ func NewMqttConnection() *MqttConnection {
 		retryConnect:     true,
 		connectTimeout:   30000,
 		reconnectTimeout: 60000,
-		keepAliveTimeout: 1000,
+		keepAliveTimeout: 1000, //!!
 	}
 	return c
 }

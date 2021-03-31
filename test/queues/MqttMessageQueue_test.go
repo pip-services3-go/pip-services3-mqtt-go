@@ -51,6 +51,7 @@ func newMqttMessageQueueTest() *mqttMessageQueueTest {
 		"credential.username", mqttUser,
 		"credential.password", mqttPassword,
 		"options.autosubscribe", true,
+		"options.serialize_envelope", true,
 	))
 
 	fixture := NewMessageQueueFixture(queue)
