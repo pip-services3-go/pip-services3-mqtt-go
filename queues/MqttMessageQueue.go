@@ -510,9 +510,9 @@ func (c *MqttMessageQueue) Send(correlationId string, envelop *cqueues.MessageEn
 		return err
 	}
 
-	topic := c.Name()
+	topic := c.topic
 	if topic == "" {
-		topic = c.topic
+		topic = c.Name()
 	}
 
 	err = c.Connection.Publish(topic, c.qos, c.retain, msg)
