@@ -14,7 +14,7 @@
 
 
 
-<script>var goVersion = "go1.13.15";</script>
+<script>var goVersion = "go1.16.15";</script>
 <script src="../../lib/godoc/godocs.js" defer></script>
 </head>
 <body>
@@ -131,10 +131,13 @@
 					<dd>&nbsp; &nbsp; <a href="index.html#MqttConnection.Configure">func (c *MqttConnection) Configure(config *cconf.ConfigParams)</a></dd>
 				
 					
-					<dd>&nbsp; &nbsp; <a href="index.html#MqttConnection.GetConnection">func (c *MqttConnection) GetConnection() mqtt.Client</a></dd>
+					<dd>&nbsp; &nbsp; <a href="index.html#MqttConnection.CreateQueue">func (c *MqttConnection) CreateQueue() error</a></dd>
 				
 					
-					<dd>&nbsp; &nbsp; <a href="index.html#MqttConnection.GetQueueNames">func (c *MqttConnection) GetQueueNames() ([]string, error)</a></dd>
+					<dd>&nbsp; &nbsp; <a href="index.html#MqttConnection.DeleteQueue">func (c *MqttConnection) DeleteQueue() error</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#MqttConnection.GetConnection">func (c *MqttConnection) GetConnection() mqtt.Client</a></dd>
 				
 					
 					<dd>&nbsp; &nbsp; <a href="index.html#MqttConnection.IsOpen">func (c *MqttConnection) IsOpen() bool</a></dd>
@@ -144,6 +147,9 @@
 				
 					
 					<dd>&nbsp; &nbsp; <a href="index.html#MqttConnection.Publish">func (c *MqttConnection) Publish(topic string, qos byte, retained bool, data []byte) error</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="index.html#MqttConnection.ReadQueueNames">func (c *MqttConnection) ReadQueueNames() ([]string, error)</a></dd>
 				
 					
 					<dd>&nbsp; &nbsp; <a href="index.html#MqttConnection.SetReferences">func (c *MqttConnection) SetReferences(references cref.IReferences)</a></dd>
@@ -213,7 +219,7 @@
 		
 			
 			
-			<h2 id="IMqttMessageListener">type <a href="http://localhost:6060/src/connect/IMqttMessageListener.go?s=73:145#L1">IMqttMessageListener</a>
+			<h2 id="IMqttMessageListener">type <a href="http://localhost:6060/src/connect/IMqttMessageListener.go?s=79:153#L1">IMqttMessageListener</a>
 				<a class="permalink" href="index.html#IMqttMessageListener">&#xb6;</a>
 				
 				
@@ -237,7 +243,7 @@
 		
 			
 			
-			<h2 id="MqttConnection">type <a href="http://localhost:6060/src/connect/MqttConnection.go?s=2031:2508#L32">MqttConnection</a>
+			<h2 id="MqttConnection">type <a href="http://localhost:6060/src/connect/MqttConnection.go?s=2135:2658#L33">MqttConnection</a>
 				<a class="permalink" href="index.html#MqttConnection">&#xb6;</a>
 				
 				
@@ -250,6 +256,7 @@ By defining a connection and sharing it through multiple message queues
 you can reduce number of used connections.
 
 ### Configuration parameters ###
+ - client_id:               (optional) name of the client id
  - connection(s):
    - discovery_key:               (optional) a key to retrieve the connection from [[<a href="https://pip-services3-node.github.io/pip-services3-components-node/interfaces/connect.idiscovery.html">https://pip-services3-node.github.io/pip-services3-components-node/interfaces/connect.idiscovery.html</a> IDiscovery]]
    - host:                        host name or IP address
@@ -298,7 +305,7 @@ you can reduce number of used connections.
 
 			
 				
-				<h3 id="NewMqttConnection">func <a href="http://localhost:6060/src/connect/MqttConnection.go?s=2583:2623#L55">NewMqttConnection</a>
+				<h3 id="NewMqttConnection">func <a href="http://localhost:6060/src/connect/MqttConnection.go?s=2736:2776#L57">NewMqttConnection</a>
 					<a class="permalink" href="index.html#NewMqttConnection">&#xb6;</a>
 					
 					
@@ -314,7 +321,7 @@ NewMqttConnection creates a new instance of the connection component.
 
 			
 				
-				<h3 id="MqttConnection.Close">func (*MqttConnection) <a href="http://localhost:6060/src/connect/MqttConnection.go?s=5919:5977#L159">Close</a>
+				<h3 id="MqttConnection.Close">func (*MqttConnection) <a href="http://localhost:6060/src/connect/MqttConnection.go?s=6248:6306#L162">Close</a>
 					<a class="permalink" href="index.html#MqttConnection.Close">&#xb6;</a>
 					
 					
@@ -334,7 +341,7 @@ Return			 error or nil no errors occured
 				
 			
 				
-				<h3 id="MqttConnection.Configure">func (*MqttConnection) <a href="http://localhost:6060/src/connect/MqttConnection.go?s=3283:3345#L80">Configure</a>
+				<h3 id="MqttConnection.Configure">func (*MqttConnection) <a href="http://localhost:6060/src/connect/MqttConnection.go?s=3466:3528#L82">Configure</a>
 					<a class="permalink" href="index.html#MqttConnection.Configure">&#xb6;</a>
 					
 					
@@ -351,7 +358,31 @@ Configures component by passing configuration parameters.
 				
 			
 				
-				<h3 id="MqttConnection.GetConnection">func (*MqttConnection) <a href="http://localhost:6060/src/connect/MqttConnection.go?s=6234:6286#L176">GetConnection</a>
+				<h3 id="MqttConnection.CreateQueue">func (*MqttConnection) <a href="http://localhost:6060/src/connect/MqttConnection.go?s=6756:6800#L187">CreateQueue</a>
+					<a class="permalink" href="index.html#MqttConnection.CreateQueue">&#xb6;</a>
+					
+					
+				</h3>
+				<pre>func (c *<a href="index.html#MqttConnection">MqttConnection</a>) CreateQueue() <a href="http://localhost:6060/pkg/builtin/#error">error</a></pre>
+				
+				
+				
+				
+			
+				
+				<h3 id="MqttConnection.DeleteQueue">func (*MqttConnection) <a href="http://localhost:6060/src/connect/MqttConnection.go?s=6822:6866#L191">DeleteQueue</a>
+					<a class="permalink" href="index.html#MqttConnection.DeleteQueue">&#xb6;</a>
+					
+					
+				</h3>
+				<pre>func (c *<a href="index.html#MqttConnection">MqttConnection</a>) DeleteQueue() <a href="http://localhost:6060/pkg/builtin/#error">error</a></pre>
+				
+				
+				
+				
+			
+				
+				<h3 id="MqttConnection.GetConnection">func (*MqttConnection) <a href="http://localhost:6060/src/connect/MqttConnection.go?s=6580:6632#L179">GetConnection</a>
 					<a class="permalink" href="index.html#MqttConnection.GetConnection">&#xb6;</a>
 					
 					
@@ -363,19 +394,7 @@ Configures component by passing configuration parameters.
 				
 			
 				
-				<h3 id="MqttConnection.GetQueueNames">func (*MqttConnection) <a href="http://localhost:6060/src/connect/MqttConnection.go?s=6313:6371#L180">GetQueueNames</a>
-					<a class="permalink" href="index.html#MqttConnection.GetQueueNames">&#xb6;</a>
-					
-					
-				</h3>
-				<pre>func (c *<a href="index.html#MqttConnection">MqttConnection</a>) GetQueueNames() ([]<a href="http://localhost:6060/pkg/builtin/#string">string</a>, <a href="http://localhost:6060/pkg/builtin/#error">error</a>)</pre>
-				
-				
-				
-				
-			
-				
-				<h3 id="MqttConnection.IsOpen">func (*MqttConnection) <a href="http://localhost:6060/src/connect/MqttConnection.go?s=4268:4306#L101">IsOpen</a>
+				<h3 id="MqttConnection.IsOpen">func (*MqttConnection) <a href="http://localhost:6060/src/connect/MqttConnection.go?s=4542:4580#L104">IsOpen</a>
 					<a class="permalink" href="index.html#MqttConnection.IsOpen">&#xb6;</a>
 					
 					
@@ -391,7 +410,7 @@ Returns true if the component has been opened and false otherwise.
 				
 			
 				
-				<h3 id="MqttConnection.Open">func (*MqttConnection) <a href="http://localhost:6060/src/connect/MqttConnection.go?s=4500:4557#L108">Open</a>
+				<h3 id="MqttConnection.Open">func (*MqttConnection) <a href="http://localhost:6060/src/connect/MqttConnection.go?s=4781:4838#L111">Open</a>
 					<a class="permalink" href="index.html#MqttConnection.Open">&#xb6;</a>
 					
 					
@@ -409,7 +428,7 @@ Opens the component.
 				
 			
 				
-				<h3 id="MqttConnection.Publish">func (*MqttConnection) <a href="http://localhost:6060/src/connect/MqttConnection.go?s=6836:6926#L204">Publish</a>
+				<h3 id="MqttConnection.Publish">func (*MqttConnection) <a href="http://localhost:6060/src/connect/MqttConnection.go?s=7343:7433#L215">Publish</a>
 					<a class="permalink" href="index.html#MqttConnection.Publish">&#xb6;</a>
 					
 					
@@ -435,7 +454,19 @@ Returns: error or nil for success
 				
 			
 				
-				<h3 id="MqttConnection.SetReferences">func (*MqttConnection) <a href="http://localhost:6060/src/connect/MqttConnection.go?s=4003:4070#L94">SetReferences</a>
+				<h3 id="MqttConnection.ReadQueueNames">func (*MqttConnection) <a href="http://localhost:6060/src/connect/MqttConnection.go?s=6663:6722#L183">ReadQueueNames</a>
+					<a class="permalink" href="index.html#MqttConnection.ReadQueueNames">&#xb6;</a>
+					
+					
+				</h3>
+				<pre>func (c *<a href="index.html#MqttConnection">MqttConnection</a>) ReadQueueNames() ([]<a href="http://localhost:6060/pkg/builtin/#string">string</a>, <a href="http://localhost:6060/pkg/builtin/#error">error</a>)</pre>
+				
+				
+				
+				
+			
+				
+				<h3 id="MqttConnection.SetReferences">func (*MqttConnection) <a href="http://localhost:6060/src/connect/MqttConnection.go?s=4270:4337#L97">SetReferences</a>
 					<a class="permalink" href="index.html#MqttConnection.SetReferences">&#xb6;</a>
 					
 					
@@ -452,7 +483,7 @@ Sets references to dependent components.
 				
 			
 				
-				<h3 id="MqttConnection.Subscribe">func (*MqttConnection) <a href="http://localhost:6060/src/connect/MqttConnection.go?s=7347:7442#L226">Subscribe</a>
+				<h3 id="MqttConnection.Subscribe">func (*MqttConnection) <a href="http://localhost:6060/src/connect/MqttConnection.go?s=7876:7971#L237">Subscribe</a>
 					<a class="permalink" href="index.html#MqttConnection.Subscribe">&#xb6;</a>
 					
 					
@@ -477,7 +508,7 @@ Returns: err or nil for success
 				
 			
 				
-				<h3 id="MqttConnection.Unsubscribe">func (*MqttConnection) <a href="http://localhost:6060/src/connect/MqttConnection.go?s=8384:8471#L268">Unsubscribe</a>
+				<h3 id="MqttConnection.Unsubscribe">func (*MqttConnection) <a href="http://localhost:6060/src/connect/MqttConnection.go?s=8955:9042#L279">Unsubscribe</a>
 					<a class="permalink" href="index.html#MqttConnection.Unsubscribe">&#xb6;</a>
 					
 					
@@ -504,7 +535,7 @@ Returns: err or nil for success
 		
 			
 			
-			<h2 id="MqttConnectionResolver">type <a href="http://localhost:6060/src/connect/MqttConnectionResolver.go?s=1271:1400#L25">MqttConnectionResolver</a>
+			<h2 id="MqttConnectionResolver">type <a href="http://localhost:6060/src/connect/MqttConnectionResolver.go?s=1305:1437#L25">MqttConnectionResolver</a>
 				<a class="permalink" href="index.html#MqttConnectionResolver">&#xb6;</a>
 				
 				
@@ -553,7 +584,7 @@ References:
 
 			
 				
-				<h3 id="NewMqttConnectionResolver">func <a href="http://localhost:6060/src/connect/MqttConnectionResolver.go?s=1402:1458#L30">NewMqttConnectionResolver</a>
+				<h3 id="NewMqttConnectionResolver">func <a href="http://localhost:6060/src/connect/MqttConnectionResolver.go?s=1441:1497#L30">NewMqttConnectionResolver</a>
 					<a class="permalink" href="index.html#NewMqttConnectionResolver">&#xb6;</a>
 					
 					
@@ -566,7 +597,7 @@ References:
 
 			
 				
-				<h3 id="MqttConnectionResolver.Compose">func (*MqttConnectionResolver) <a href="http://localhost:6060/src/connect/MqttConnectionResolver.go?s=5543:5709#L173">Compose</a>
+				<h3 id="MqttConnectionResolver.Compose">func (*MqttConnectionResolver) <a href="http://localhost:6060/src/connect/MqttConnectionResolver.go?s=5725:5892#L173">Compose</a>
 					<a class="permalink" href="index.html#MqttConnectionResolver.Compose">&#xb6;</a>
 					
 					
@@ -591,7 +622,7 @@ resolved options or error.
 				
 			
 				
-				<h3 id="MqttConnectionResolver.Configure">func (*MqttConnectionResolver) <a href="http://localhost:6060/src/connect/MqttConnectionResolver.go?s=1787:1857#L41">Configure</a>
+				<h3 id="MqttConnectionResolver.Configure">func (*MqttConnectionResolver) <a href="http://localhost:6060/src/connect/MqttConnectionResolver.go?s=1837:1907#L41">Configure</a>
 					<a class="permalink" href="index.html#MqttConnectionResolver.Configure">&#xb6;</a>
 					
 					
@@ -612,7 +643,7 @@ configuration parameters to be set.
 				
 			
 				
-				<h3 id="MqttConnectionResolver.Resolve">func (*MqttConnectionResolver) <a href="http://localhost:6060/src/connect/MqttConnectionResolver.go?s=4571:4662#L143">Resolve</a>
+				<h3 id="MqttConnectionResolver.Resolve">func (*MqttConnectionResolver) <a href="http://localhost:6060/src/connect/MqttConnectionResolver.go?s=4723:4814#L143">Resolve</a>
 					<a class="permalink" href="index.html#MqttConnectionResolver.Resolve">&#xb6;</a>
 					
 					
@@ -635,7 +666,7 @@ receives resolved options or error.
 				
 			
 				
-				<h3 id="MqttConnectionResolver.SetReferences">func (*MqttConnectionResolver) <a href="http://localhost:6060/src/connect/MqttConnectionResolver.go?s=2107:2182#L50">SetReferences</a>
+				<h3 id="MqttConnectionResolver.SetReferences">func (*MqttConnectionResolver) <a href="http://localhost:6060/src/connect/MqttConnectionResolver.go?s=2166:2241#L50">SetReferences</a>
 					<a class="permalink" href="index.html#MqttConnectionResolver.SetReferences">&#xb6;</a>
 					
 					
@@ -656,7 +687,7 @@ Parameters:
 		
 			
 			
-			<h2 id="MqttSubscription">type <a href="http://localhost:6060/src/connect/MqttSubscription.go?s=17:128#L1">MqttSubscription</a>
+			<h2 id="MqttSubscription">type <a href="http://localhost:6060/src/connect/MqttSubscription.go?s=19:135#L1">MqttSubscription</a>
 				<a class="permalink" href="index.html#MqttSubscription">&#xb6;</a>
 				
 				
@@ -693,13 +724,13 @@ Parameters:
 
 
 <div id="footer">
-Build version go1.13.15.<br>
+Build version go1.16.15.<br>
 Except as <a href="https://developers.google.com/site-policies#restrictions">noted</a>,
 the content of this page is licensed under the
 Creative Commons Attribution 3.0 License,
 and code is licensed under a <a href="http://localhost:6060/LICENSE">BSD license</a>.<br>
-<a href="http://localhost:6060/doc/tos.html">Terms of Service</a> |
-<a href="http://www.google.com/intl/en/policies/privacy/">Privacy Policy</a>
+<a href="https://golang.org/doc/tos.html">Terms of Service</a> |
+<a href="https://www.google.com/intl/en/policies/privacy/">Privacy Policy</a>
 </div>
 
 </div><!-- .container -->
